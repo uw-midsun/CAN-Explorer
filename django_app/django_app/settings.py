@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-ge$w%*5-c=9u5$zr5rvgua$*c66tm*79ew!u9rr+zahhs_g=fm
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['192.168.24.24']
 
 
 # Application definition
@@ -79,6 +79,9 @@ DATABASES = {
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
+
+# Mongo 
+# DATABASES = {'default': {'ENGINE': 'djongo',      'NAME': 'your-db-name', }}
 
 
 # Password validation
