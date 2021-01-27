@@ -13,9 +13,13 @@ Python should be installed in the Vagrant box already, but if you don't have Mon
 sudo apt install mongodb
 ```
 
-Make sure you're on venv
+For the first-time setup, make sure you're on venv
 ```
 python3 -m venv ~/.virtualenvs/djangodev
+```
+
+For subsequent runs, 
+```
 source ~/.virtualenvs/djangodev/bin/activate
 ```
 
