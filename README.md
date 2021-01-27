@@ -59,9 +59,15 @@ __As of Jan 23__
 
 Make sure you have pulled the most recent version of [uwmidsun/box](https://github.com/uw-midsun/box) if you haven't done so already and run `vagrant reload && vagrant ssh` to apply new port-forwarding settings
 
-To run server,
+For first run
 ```
 cd django_app
+python manage.py makemigrations
+python manage.py migrate
+```
+
+To run server,
+```
 python3 manage.py runserver 0.0.0.0:8000
 ```
 
