@@ -1,12 +1,11 @@
 # CAN-Explorer
 An application to visualize CAN data and interact with the CAN bus
 
-# Run Django App
+## Requirements:
+Python >=3.6
+Mongo 3.6.3
 
-Install libraries at root of folder
-```
-pip install -r requirements.txt
-```
+## Python setup
 
 Make sure you're on venv
 ```
@@ -18,6 +17,16 @@ __If source command isn't available, run__
 ```
 ~/.virtualenvs/djangodev/bin/activate
 ```
+
+Install libraries at root of folder
+```
+pip install -r requirements.txt
+```
+
+# Run Django App
+
+## As of Jan 23
+Make sure you have pulled the most recent version of [uwmidsun/box](https://github.com/uw-midsun/box) if you haven't done so already and run `vagrant reload && vagrant ssh` to apply new port-forwarding settings
 
 To run server,
 ```
