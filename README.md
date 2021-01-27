@@ -3,9 +3,15 @@ An application to visualize CAN data and interact with the CAN bus
 
 ## Requirements:
 Python >=3.6
-Mongo 3.6.3
+MongoDB 3.6.3
 
-## Python setup
+## Django setup
+
+The Django app requires Python >= 3.6 and MongoDB >= 3.6.3
+Python should be installed in the Vagrant box already, but if you don't have MongoDB, run 
+```
+sudo apt install mongodb
+```
 
 Make sure you're on venv
 ```
@@ -23,9 +29,10 @@ Install libraries at root of folder
 pip install -r requirements.txt
 ```
 
-# Run Django App
+## Run Django App
 
-## As of Jan 23
+__As of Jan 23__ 
+
 Make sure you have pulled the most recent version of [uwmidsun/box](https://github.com/uw-midsun/box) if you haven't done so already and run `vagrant reload && vagrant ssh` to apply new port-forwarding settings
 
 To run server,
