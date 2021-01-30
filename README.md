@@ -7,12 +7,8 @@ git clone https://github.com/uw-midsun/CAN-Explorer.git
 cd CAN-Explorer
 ```
 ## Requirements:
-Python >=3.6
-MongoDB >= 3.6.3
-
-
 The Django app requires Python >= 3.6 and MongoDB >= 3.6.3
-Python should be installed in the Vagrant box already, but if you don't have MongoDB...
+Python3 should be installed in the Vagrant box already, but if you don't have MongoDB...
 
 ## MongoDB setup
 To setup mongoDB for data collection run (only necessary the first time you start working with the database)
@@ -34,12 +30,18 @@ sudo systemctl stop mongod
 
 ## Django setup
 
-For the first-time setup, make sure you're on venv
+For the first-time setup, make sure you're on venv...
 ```
 python3 -m venv ~/.virtualenvs/djangodev
+source ~/.virtualenvs/djangodev/bin/activate
 ```
 
-For subsequent runs, 
+and install libraries at root of folder
+```
+pip install -r requirements.txt
+```
+
+For subsequent runs
 ```
 source ~/.virtualenvs/djangodev/bin/activate
 ```
@@ -47,11 +49,6 @@ source ~/.virtualenvs/djangodev/bin/activate
 __If source command isn't available, run__
 ```
 ~/.virtualenvs/djangodev/bin/activate
-```
-
-Install libraries at root of folder
-```
-pip install -r requirements.txt
 ```
 
 ## Run Django App
