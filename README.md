@@ -13,6 +13,7 @@ MongoDB >= 3.6.3
 
 The Django app requires Python >= 3.6 and MongoDB >= 3.6.3
 Python should be installed in the Vagrant box already, but if you don't have MongoDB...
+
 ## MongoDB setup
 To setup mongoDB for data collection run (only necessary the first time you start working with the database)
 ```
