@@ -30,7 +30,7 @@ sudo systemctl stop mongod
 
 ## Django setup
 
-For the first-time setup,
+For the first-time setup, at the root folder run
 ```
 pipenv install 
 ```
@@ -41,7 +41,7 @@ __As of Jan 23__
 
 Make sure you have pulled the most recent version of [uwmidsun/box](https://github.com/uw-midsun/box) if you haven't done so already and run `vagrant reload && vagrant ssh` to apply new port-forwarding settings
 
-Navigate to folder
+Navigate to backend folder
 ```
 cd backend
 ```
