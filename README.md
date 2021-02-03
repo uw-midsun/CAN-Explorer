@@ -30,25 +30,9 @@ sudo systemctl stop mongod
 
 ## Django setup
 
-For the first-time setup, make sure you're on venv...
+For the first-time setup, at the root folder run
 ```
-python3 -m venv ~/.virtualenvs/djangodev
-source ~/.virtualenvs/djangodev/bin/activate
-```
-
-and install libraries at root of folder
-```
-pip install -r requirements.txt
-```
-
-For subsequent runs
-```
-source ~/.virtualenvs/djangodev/bin/activate
-```
-
-__If source command isn't available, run__
-```
-~/.virtualenvs/djangodev/bin/activate
+pipenv install 
 ```
 
 ## Run Django App
@@ -57,16 +41,20 @@ __As of Jan 23__
 
 Make sure you have pulled the most recent version of [uwmidsun/box](https://github.com/uw-midsun/box) if you haven't done so already and run `vagrant reload && vagrant ssh` to apply new port-forwarding settings
 
+Navigate to backend folder
+```
+cd backend
+```
+
 For first run
 ```
-cd django_app
 python manage.py makemigrations
 python manage.py migrate
 ```
 
 To run server,
 ```
-python3 manage.py runserver 0.0.0.0:8000
+pipenv run start
 ```
 
 Go to http://192.168.24.24:8000/ in your local browser to check website
