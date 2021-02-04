@@ -46,6 +46,22 @@ Navigate to backend folder
 cd backend
 ```
 
+Installing Redis (>= 6.0)
+https://www.digitalocean.com/community/tutorials/how-to-install-and-secure-redis-on-ubuntu-18-04
+https://computingforgeeks.com/how-to-install-redis-on-ubuntu-18-04-debian-9/
+
+Make sure Redis is started
+```
+TODO
+```
+
+Make sure vcan is started 
+```
+sudo modprobe vcan && sudo ip link add dev vcan0 type vcan && sudo ip link set up vcan0
+```
+
+Make sure mock_can_data is setup for testing
+
 For first run
 ```
 python manage.py makemigrations

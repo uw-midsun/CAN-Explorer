@@ -1,0 +1,20 @@
+<h1 id="can_msg">Hi</h1>
+{% block script %}
+<script>
+    var socket = new WebSocket('ws://' + window.location.host + "/ws/can_server/");
+
+    socket.onopen = function open() {
+      console.log('WebSockets connection created.');
+    };
+
+    if (socket.readyState == WebSocket.OPEN) {
+      socket.onopen();
+    }
+
+    socket.onmessage = function(e) {
+      document.getElementById("can_msg").textContent=e.data;
+      
+      console.log(e);
+    }
+</script>
+{% endblock script %}

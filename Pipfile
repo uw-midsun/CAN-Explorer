@@ -13,6 +13,8 @@ sqlparse = "==0.2.4"
 websockets = "==8.1"
 wheel = "==0.36.2"
 setuptools = "==52.0.0"
+channels = "*"
+channels-redis = "*"
 
 [dev-packages]
 

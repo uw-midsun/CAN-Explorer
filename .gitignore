@@ -124,5 +124,9 @@ dmypy.json
 # OS specific stuff
 .DS_Store
 
+# IDE Stuff
+.idea
+.vscode
+
 # Pipenv
 *.lock
