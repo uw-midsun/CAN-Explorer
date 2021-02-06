@@ -1,13 +1,18 @@
 # CAN-Explorer
 An application to visualize CAN data and interact with the CAN bus
 
+__As of Jan 23__ 
+
+Make sure you have pulled the most recent version of [uwmidsun/box](https://github.com/uw-midsun/box) if you haven't done so already and run `vagrant reload && vagrant ssh` to apply new port-forwarding settings
+
 SSH into the vagrant box and run
 ```
+cd shared
 git clone https://github.com/uw-midsun/CAN-Explorer.git
 cd CAN-Explorer
 ```
 ## Requirements:
-The Django app requires Python >= 3.6 and MongoDB >= 3.6.3
+The Django app requires Python >= 3.6, Pipenv, MongoDB >= 3.6.3 and Redis >= 6.0
 Python3 should be installed in the Vagrant box already, but if you don't have MongoDB...
 
 ## MongoDB setup
@@ -28,50 +33,50 @@ When you are ready to shutdown the database run
 sudo systemctl stop mongod
 ```
 
-## Django setup
-
-For the first-time setup, at the root folder run
+# Pipenv
+To have global install of pipenv, run
 ```
-pipenv install 
-```
-
-## Run Django App
-
-__As of Jan 23__ 
-
-Make sure you have pulled the most recent version of [uwmidsun/box](https://github.com/uw-midsun/box) if you haven't done so already and run `vagrant reload && vagrant ssh` to apply new port-forwarding settings
-
-Navigate to backend folder
-```
-cd backend
+pip3 install pipenv
 ```
 
-Installing Redis (>= 6.0)
-https://www.digitalocean.com/community/tutorials/how-to-install-and-secure-redis-on-ubuntu-18-04
-https://computingforgeeks.com/how-to-install-redis-on-ubuntu-18-04-debian-9/
-
-Make sure Redis is started
+# Redis setup
+Get the latest version of Redis with
 ```
-TODO
-```
-
-Make sure vcan is started 
-```
-sudo modprobe vcan && sudo ip link add dev vcan0 type vcan && sudo ip link set up vcan0
+sudo add-apt-repository ppa:chris-lea/redis-server
+sudo apt-get update
+sudo apt -y install redis-server
 ```
 
-Make sure mock_can_data is setup for testing
-
-For first run
+Edit configuration file for systemctl to be able to run it. You can substitute nano with vim if you want
 ```
-python manage.py makemigrations
-python manage.py migrate
+sudo nano /etc/redis/redis.conf
 ```
 
-To run server,
-```
-pipenv run start
+and replace "supervised" field
+```bash
+. . .
+
+# If you run Redis from upstart or systemd, Redis can interact with your
+# supervision tree. Options:
+#   supervised no      - no supervision interaction
+#   supervised upstart - signal upstart by putting Redis into SIGSTOP mode
+#   supervised systemd - signal systemd by writing READY=1 to $NOTIFY_SOCKET
+#   supervised auto    - detect upstart or systemd method based on
+#                        UPSTART_JOB or NOTIFY_SOCKET environment variables
+# Note: these supervision methods only signal "process is ready."
+#       They do not enable continuous liveness pings back to your supervisor.
+supervised systemd
+
+. . .
 ```
 
-Go to http://192.168.24.24:8000/ in your local browser to check website
+Configure Redis to start on boot of VM 
+```
+sudo systemctl enable --now redis-server
+```
+
+Or if you prefer the old fashioned way...
+```
+sudo systemctl start redis.service
+```
 

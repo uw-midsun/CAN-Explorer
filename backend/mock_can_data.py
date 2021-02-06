@@ -1,10 +1,3 @@
-# This script automatically generates and sends CAN messages
-# based off of the DBC file
-# Ensure that you have can and cantools installed, which can be accomplished
-# by running pip install -r requirements.txt
-# Alternatively you could also just run
-# pip install can && pip install cantools
-
 # If you are running this script with virtual CAN
 # ensure that it is set up first
 # You can run the below commands
@@ -62,6 +55,7 @@ def send_message():
         data[signal.name] = random.randint(0, pow(2, signal.length) - 1)
     new_data = msg.encode(data)
     message = can.Message(arbitration_id=msg.frame_id, data=new_data)
+    print(message)
     can_bus.send(message)
 
 

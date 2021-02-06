@@ -1,20 +1,65 @@
 <h1 id="can_msg">Hi</h1>
+
+<button id="converted_btn">Converted</button>
+
+<button id="raw_btn">Raw</button>
+
 {% block script %}
 <script>
-    var socket = new WebSocket('ws://' + window.location.host + "/ws/can_server/");
+    // HTML UI to quickly debug can_server websocket endpoints 
 
-    socket.onopen = function open() {
-      console.log('WebSockets connection created.');
+    var convert_socket = new WebSocket('ws://' + window.location.host + "/ws/can_server/converted");
+    var raw_socket = new WebSocket('ws://' + window.location.host + "/ws/can_server/raw");
+
+    var should_convert = true;
+
+    convert_socket.onopen = function open() {
+      console.log('Converted CAN WebSockets connection created.');
     };
 
-    if (socket.readyState == WebSocket.OPEN) {
-      socket.onopen();
+    // Converted can websocket logic 
+    if (convert_socket.readyState == WebSocket.OPEN) {
+      convert_socket.onopen();
     }
 
-    socket.onmessage = function(e) {
-      document.getElementById("can_msg").textContent=e.data;
-      
+    convert_socket.onmessage = function(e) {
+      if (should_convert)
+        document.getElementById("can_msg").textContent=e.data;
+
+      var obj = JSON.parse(e.data);
+
       console.log(e);
+      console.log(obj);
+      console.log(obj['name']);
     }
+
+    // raw can websocket logic
+    raw_socket.onopen = function open() {
+      console.log('Raw CAN WebSockets connection created.');
+    };
+
+    if (raw_socket.readyState == WebSocket.OPEN) {
+      raw_socket.onopen();
+    }
+
+    raw_socket.onmessage = function(e) {
+      if (!should_convert)
+        document.getElementById("can_msg").textContent=e.data;
+    }
+
+    // button logic
+    document.getElementById("converted_btn").onclick = function f() {
+      should_convert = true;
+      console.log("set to convert mode");
+    }
+
+    document.getElementById("raw_btn").onclick = function f() {
+      should_convert = false;
+      console.log("set to raw mode");
+    }
+
+
+
+
 </script>
 {% endblock script %}
