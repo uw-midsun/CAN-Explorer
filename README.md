@@ -34,7 +34,7 @@ sudo systemctl stop mongod
 ```
 
 # Pipenv
-To have global install of pipenv, run
+To have a global install of pipenv, run
 ```
 pip3 install pipenv
 ```
@@ -75,7 +75,7 @@ Configure Redis to start on boot of VM
 sudo systemctl enable --now redis-server
 ```
 
-Or if you prefer the old fashioned way...
+Or if you want to start Redis manually,
 ```
 sudo systemctl start redis.service
 ```
