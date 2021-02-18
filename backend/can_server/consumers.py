@@ -13,14 +13,14 @@ class ConvertConsumer(WebsocketConsumer):
         self.accept()
 
     def websocket_receive(self, event):
-        print(type(event))
+        #print(type(event))
         # can_json = json.loads(event)
         can_json_str = json.dumps(event)
         # print(f"can json str {type(can_json_str)}")
         # can_json = json.loads(can_json_str)
         # can_date = can_json['datetime']
-        print("event is ")
-        print(event['datetime'])
+        #print("event is ")
+        #print(event['datetime'])
         async_to_sync(self.channel_layer.group_send)(
             "converted",
             {
@@ -45,11 +45,17 @@ class RawConsumer(WebsocketConsumer):
         self.accept()
 
     def websocket_receive(self, event):
+        print(event)
+
+        # Create new list with 
+
+        can_json_str = json.dumps(event)
+        print(can_json_str)
         async_to_sync(self.channel_layer.group_send)(
             "raw",
             {
                 'type': 'can_message',
-                'msg': "supppp"
+                'msg': can_json_str
             }
         )
     

@@ -28,9 +28,9 @@
 
       var obj = JSON.parse(e.data);
 
-      console.log(e);
-      console.log(obj);
-      console.log(obj['name']);
+      //console.log(e);
+      //console.log(obj);
+      //console.log(obj['name']);
     }
 
     // raw can websocket logic
@@ -43,8 +43,11 @@
     }
 
     raw_socket.onmessage = function(e) {
-      if (!should_convert)
+      if (!should_convert) {
+        console.log(e)
         document.getElementById("can_msg").textContent=e.data;
+      }
+
     }
 
     // button logic
