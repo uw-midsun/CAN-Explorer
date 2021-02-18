@@ -1,8 +1,15 @@
 from rest_framework import serializers
-from can_server.models import CanServer
+from can_server.models import CanServerDecoded, CanServerRaw
 
-class CanServerSerializer(serializers.ModelSerializer):
+class CanServerDecodedSerializer(serializers.ModelSerializer):
 
     class Meta:
-        model = CanServer
-        fields = ('id', 'title', 'description', 'published')
+        model = CanServerDecoded
+        fields = ('Datetime', 'Name', 'Sender', 'Data')
+
+
+class CanServerRawSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = CanServerRaw
+        fields = ('Timestamp', 'ID', 'DLC')
