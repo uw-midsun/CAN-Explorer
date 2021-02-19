@@ -54,7 +54,7 @@ jobs:
         run: |
           ls
           cd backend
-          pipenv install
+          pipenv --python /opt/hostedtoolcache/Python/3.7.9/x64 install
 
       - name: Install frontend dependencies
         run: |
