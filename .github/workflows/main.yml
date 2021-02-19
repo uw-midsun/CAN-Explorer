@@ -11,23 +11,35 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-16.04
+    runs-on: ubuntu-18.04
     steps:
       - uses: actions/checkout@v2
-
-      - uses: actions/setup-python@v2
-        with:
-          python-version: '3.x'
-
-      - uses: actions/setup-node@v2
-        with:
-          node-version: '12'
-
-      - name: Install pipenv
+      - name: Local fix for Act
         run: |
+          # Hack to get setup-python to work on act
+          # (see https://github.com/nektos/act/issues/251)
+          if [ ! -f "/etc/lsb-release" ] ; then
+            echo "DISTRIB_RELEASE=18.04" > /etc/lsb-release
+          fi
+      - name: Setup Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.7'
+          architecture: 'x64'
+        run: |
+          sudo apt-get update
           pip3 install --user pipenv
           pip3 install --user pylint
           pip3 install --user autopep8
+
+      - name: Install pipenv
+        run: |
+          python --version
+
+      - name: Setup Node
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '12'
 
       - name: Install MongoDB
         run: |
