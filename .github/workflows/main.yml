@@ -11,9 +11,16 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-16.04
     steps:
       - uses: actions/checkout@v2
+
+      - name: Setup directories
+        run: |
+          # create directory that will be on the PATH
+          mkdir -p ~/.local/bin
+          echo "${HOME}/.local/bin" >> $GITHUB_PATH
+          mkdir -p ~/source
 
       - name: Setup Python
         uses: actions/setup-python@v2
@@ -29,9 +36,9 @@ jobs:
           pip3 install --user autopep8
 
       - name: Setup Node
-      - uses: actions/setup-node@v2
+        uses: actions/setup-node@v2
         with:
-          node-version: '12'
+          node-version: '15.8.0'
 
       - name: Install MongoDB
         run: |
