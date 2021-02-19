@@ -52,6 +52,7 @@ jobs:
 
       - name: Install backend dependencies 
         run: |
+          ls
           cd backend
           pipenv install
 
