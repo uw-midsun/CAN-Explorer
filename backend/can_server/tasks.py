@@ -27,47 +27,28 @@ def task_decode_send():
 
 
 def decode_and_send():
-    # await asyncio.sleep(1)
-    # print("hello")
     message = can_bus.recv()
     decoded = db.decode_message(message.arbitration_id, message.data)
-    # print(f"message is {decoded}")
 
     time = str(datetime.fromtimestamp(message.timestamp))
     name = db.get_message_by_frame_id(message.arbitration_id).name
     sender = db.get_message_by_frame_id(message.arbitration_id).senders[0]
 
-    print("message")
-    print(message)
-    print("decoded")
-    print(decoded)
-    print("time")
-    print(time)
-    print("name")
-    print(name)
-    print("sender")
-    print(sender)
-    print("data")
-    print(message.timestamp)
-    print(message.dlc)
-    print(message.channel)
-    print(message.data)
-    print('new')
-    new_data = "".join(map(chr, message.data))
-    print(new_data)
-    # print("'{}'".format(message.data.decode('utf-8', 'replace')))
-    # hex
-    print(''.join('{:02x}'.format(x) for x in message.data))
-    # bin
-    # most significant bit
-    print(''.join(format(byte, '08b') for byte in message.data))
+    # hexadecimal representation of data
+    hex = ''.join('{:02x}'.format(x) for x in message.data)
+    print(hex)
 
-    # dec
-    print(int.from_bytes(message.data, byteorder='big', signed=False))
+    # binary rep. of data
+    # most significant bit
+    bin = ''.join(format(byte, '08b') for byte in message.data)
+    print(bin)
+
+    # decimal rep. of data
+    dec = int.from_bytes(message.data, byteorder='big', signed=False)
+    print(dec)
 
     can_decoded_data = {'datetime': time, 'name': name,
                         'sender': sender, 'data': decoded}
-    # print(can_decoded_data)
 
     async_to_sync(channel_layer.group_send)("converted", {"type": "websocket_receive", 'datetime': time, 'name': name,
                                                            'sender': sender, 'data': decoded})
