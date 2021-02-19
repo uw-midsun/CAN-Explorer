@@ -25,7 +25,7 @@ jobs:
       - name: Setup Python
         uses: actions/setup-python@v2
         with:
-          python-version: '3.7.9'
+          python-version: '3.6'
           architecture: 'x64'
 
       - name: Install pipenv
@@ -54,7 +54,7 @@ jobs:
         run: |
           ls
           python --version
-          pipenv --python 3.7.9 install --deploy --dev
+          pipenv install --deploy --dev
 
       - name: Install frontend dependencies
         run: |
