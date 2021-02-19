@@ -31,9 +31,9 @@ jobs:
       - name: Install pipenv
         run: |
           sudo apt-get update
-          pip install --user pipenv
-          pip install --user pylint
-          pip install --user autopep8
+          pip install pipenv
+          pip install pylint
+          pip install autopep8
 
       - name: Setup Node
         uses: actions/setup-node@v2
@@ -53,11 +53,10 @@ jobs:
       - name: Install backend dependencies 
         run: |
           ls
-          cd backend
-          pipenv --python /opt/hostedtoolcache/Python/3.7.9/x64 install
+          python --version
+          pipenv install --deploy --dev
 
       - name: Install frontend dependencies
         run: |
-          cd ~
           cd frontend 
           npm install
