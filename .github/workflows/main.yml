@@ -54,7 +54,7 @@ jobs:
         run: |
           ls
           python --version
-          pipenv install --deploy --dev
+          pipenv --python 3.7.9 install --deploy --dev
 
       - name: Install frontend dependencies
         run: |
