@@ -14,13 +14,7 @@ jobs:
     runs-on: ubuntu-18.04
     steps:
       - uses: actions/checkout@v2
-      - name: Local fix for Act
-        run: |
-          # Hack to get setup-python to work on act
-          # (see https://github.com/nektos/act/issues/251)
-          if [ ! -f "/etc/lsb-release" ] ; then
-            echo "DISTRIB_RELEASE=18.04" > /etc/lsb-release
-          fi
+      
       - name: Setup Python
         uses: actions/setup-python@v2
         with:
