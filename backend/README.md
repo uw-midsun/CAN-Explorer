@@ -3,18 +3,24 @@
 For the first-time setup, at the root folder run
 ```
 pipenv install 
+pipenv run makemigrations
+pipenv run migrate
 ```
 
 # Run Django App
 
+## __Fast route__
+Use honcho to run all the required shells.
+
+```
+honcho start
+```
+
+## __Regular route__
+
 You'll need 3 separate terminal shells open (4 if mocking data)
 
 ## 1st shell: Web server
-For first run
-```
-pipenv run makemigrations
-pipenv run migrate
-```
 
 To run server,
 ```
@@ -58,3 +64,4 @@ Make sure mock_can_data is setup for testing
 pipenv run mock_data
 ```
 
+# 
