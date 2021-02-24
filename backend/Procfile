@@ -1,3 +1,0 @@
-app: pipenv run start
-mock_data: pipenv run mock_data
-worker: pipenv run worker
