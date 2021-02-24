@@ -9,6 +9,7 @@ cd CAN-Explorer
 ## Requirements:
 The Django app requires Python >= 3.6 and MongoDB >= 3.6.3
 Python3 should be installed in the Vagrant box already, but if you don't have MongoDB...
+For the frontend setup run git bash as an administrator on windows to avoid symlink errors
 
 ## MongoDB setup
 To setup mongoDB for data collection run (only necessary the first time you start working with the database)
@@ -43,7 +44,7 @@ Make sure you have pulled the most recent version of [uwmidsun/box](https://gith
 
 Navigate to backend folder
 ```
-cd backend
+cd api
 ```
 
 For first run
@@ -56,6 +57,29 @@ To run server,
 ```
 pipenv run start
 ```
+
+## Mongo Display
+
+For first-time setup you may encounter the following error 
+```
+ENOSPC: System limit for number of file watchers reached
+```
+Run,
+```
+echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p
+```
+to increase the number of file watchers
+
+Follow the steps in "Run Django App" to start the server
+
+To start the frontend, navigate to the client folder and run,
+```
+npm start
+```
+*Note your MongoDB instance must be running for the app to work
+
+The decoded data will appear at localhost:3000/api/can_server/decoded
+and raw data will appear at localhost:3000/api/can_server/raw
 
 Go to http://192.168.24.24:8000/ in your local browser to check website
 

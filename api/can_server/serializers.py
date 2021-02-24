@@ -6,11 +6,11 @@ class CanServerRawSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = CanServerRaw
-        fields = ('id', 'Timestamp', 'ArbitrationID', 'DLC', 'Data')
+        fields = ('Timestamp', 'ArbitrationID', 'DLC', 'Data')
 
 
 class CanServerDecodedSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = CanServerDecoded
-        fields = ('id', 'Datetime', 'Name', 'Sender', 'Data')
+        fields = ('Datetime', 'Name', 'Sender', 'Data')
