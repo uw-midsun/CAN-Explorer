@@ -13,7 +13,7 @@ wheel = "==0.36.2"
 setuptools = "==52.0.0"
 channels = "==3.0.3"
 channels-redis = "==3.2.0"
-celery = "==4.4.7"
+celery = {extras = ["redis"], version = "*"}
 redis = "==3.5.3"
 
 [dev-packages]
@@ -27,4 +27,5 @@ worker = "celery -A django_app worker -l DEBUG -P solo"
 beat = "celery -A django_app beat -l DEBUG"
 makemigrations = "python3 manage.py makemigrations"
 migrate = "python3 manage.py migrate"
+shell = "python3 manage.py shell"
 mock_data = "python3 mock_can_data.py"

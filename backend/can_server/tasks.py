@@ -8,11 +8,12 @@ import json
 import os
 from asgiref.sync import async_to_sync
 from channels.layers import get_channel_layer
+from celery import shared_task
 import asyncio
-from celery.task.schedules import crontab
-from celery.decorators import periodic_task
-from celery.utils.log import get_task_logger
-logger = get_task_logger(__name__)
+# from celery.task.schedules import crontab
+# from celery.decorators import periodic_task
+# from celery.utils.log import get_task_logger
+# logger = get_task_logger(__name__)
 
 channel_layer = get_channel_layer()
 
@@ -20,10 +21,11 @@ can_bus = can.interface.Bus('vcan0', bustype='socketcan')
 db = cantools.database.load_file('system_can.dbc')
 
 # every 2 seconds
-@periodic_task(run_every=4, name="task_decode_send", ignore_result=True)
+#  @periodic_task(run_every=4, name="task_decode_send", ignore_result=True)
+@shared_task
 def task_decode_send():
     decode_and_send()
-    logger.info("Sent CAN data")
+    # logger.info("Sent CAN data")
 
 
 def decode_and_send():
