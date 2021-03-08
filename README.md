@@ -36,7 +36,7 @@ sudo systemctl stop mongod
 # Pipenv
 To have a global install of pipenv, run
 ```
-pip3 install pipenv
+sudo -H pip3 install -U pipenv
 ```
 
 # Redis setup
@@ -48,14 +48,12 @@ sudo apt -y install redis-server
 ```
 
 Edit configuration file for systemctl to be able to run it. You can substitute nano with vim if you want
-```
+```bash
 sudo nano /etc/redis/redis.conf
 ```
 
-and replace "supervised" field
-```bash
-. . .
-
+and replace the following fields
+```
 # If you run Redis from upstart or systemd, Redis can interact with your
 # supervision tree. Options:
 #   supervised no      - no supervision interaction
@@ -66,11 +64,38 @@ and replace "supervised" field
 # Note: these supervision methods only signal "process is ready."
 #       They do not enable continuous liveness pings back to your supervisor.
 supervised systemd
-
 . . .
 ```
 
-Configure Redis to start on boot of VM 
+Next you'll have to edit the systemd redis service file so the PID can correctly run in the box
+```bash
+sudo nano /etc/systemd/system/redis.service
+```
+
+The start of the service section should look like this
+```
+[Service]
+Type=forking
+ExecStart=/usr/bin/redis-server /etc/redis/redis.conf
+ExecStop=/bin/kill -s TERM $MAINPID
+ExecStartPost=/bin/sh -c "echo $MAINPID > /var/run/redis/redis.pid"
+PIDFile=/run/redis/redis-server.pid
+```
+
+Now restart the service
+```
+sudo systemctl daemon-reload
+sudo systemctl restart redis.service
+```
+
+Exit the vagrant shell and reload the box,
+```
+vagrant reload && vagrant ssh
+```
+
+And you should be good to go! 
+
+You can configure Redis to start on boot of VM 
 ```
 sudo systemctl enable --now redis-server
 ```
