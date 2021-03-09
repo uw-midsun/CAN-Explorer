@@ -9,22 +9,25 @@ cd CAN-Explorer
 ## Requirements:
 The Django app requires Python >= 3.6 and MongoDB >= 3.6.3
 Python3 should be installed in the Vagrant box already, but if you don't have MongoDB...
-For the frontend setup run git bash as an administrator on windows to avoid symlink errors
 
 ## MongoDB setup
 To setup mongoDB for data collection run (only necessary the first time you start working with the database)
 ```
-bash mongo_setup.sh
-```
-Start the MongoDB server with
-```
-sudo systemctl start mongod
+bash setup.sh
 ```
 Verify that the server is active with
 ```
 sudo systemctl status mongod
 ```
-When you are ready to shutdown the database run
+If you would like to disable mongod from starting when you ssh into the box, run
+```
+sudo systemctl disable mongod
+```
+If you disable mongod you will have to manually start and stop mongod with
+```
+sudo systemctl start mongod
+```
+and
 ```
 sudo systemctl stop mongod
 ```
@@ -58,7 +61,27 @@ To run server,
 pipenv run start
 ```
 
-## Mongo Display
+Go to http://192.168.24.24:8000/ in your local browser to check website
+
+## Mongo Display Setup
+If node 14.x isn't already installed on your system run
+```
+bash setup.sh
+```
+*Node may have been installed if you followed the MongoDB setup steps
+
+For windows users run git bash as administrator before continuing.
+
+Navigate to the client folder and install all dependencies with
+```
+cd client
+npm install
+```
+
+To start the frontend run,
+```
+npm start
+```
 
 For first-time setup you may encounter the following errors
 
@@ -70,6 +93,7 @@ Run,
 ```
 echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p
 ```
+<<<<<<< HEAD
 to increase the number of file watchers
 
 Follow the steps in "Run Django App" to start the server
@@ -87,9 +111,16 @@ To start the frontend, navigate to the client folder and run,
 npm start
 ```
 * Note your MongoDB instance must be running for the app to work
+=======
+to increase the number of file watchers and then run
+```
+npm start
+```
+>>>>>>> d709f702b86fb01a1cb43e080aa8d7e88afaf7e4
 
-The decoded data will appear at localhost:3000/api/can_server/decoded
-and raw data will appear at localhost:3000/api/can_server/raw
+Follow the steps in "Run Django App" to start the server
 
-Go to http://192.168.24.24:8000/ in your local browser to check website
+*Note your MongoDB instance must be running for the app to work
 
+The decoded data will appear at http://localhost:3000/api/can_server/decoded
+and raw data will appear at http://localhost:3000/api/can_server/raw
