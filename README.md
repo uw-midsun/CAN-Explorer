@@ -93,10 +93,7 @@ Run,
 ```
 echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p
 ```
-<<<<<<< HEAD
 to increase the number of file watchers
-
-Follow the steps in "Run Django App" to start the server
 
 ### Not enough memory / no directory
 This is because NPM isn't too fond of shared folders on Virtualbox. To workaround this, you'll need to create a symlink to a node_modules _outside_ the shared folder. Inside the `client/` folder, run 
@@ -116,7 +113,6 @@ to increase the number of file watchers and then run
 ```
 npm start
 ```
->>>>>>> d709f702b86fb01a1cb43e080aa8d7e88afaf7e4
 
 Follow the steps in "Run Django App" to start the server
 
