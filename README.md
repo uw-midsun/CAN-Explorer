@@ -60,7 +60,9 @@ pipenv run start
 
 ## Mongo Display
 
-For first-time setup you may encounter the following error 
+For first-time setup you may encounter the following errors
+
+### File system watchers
 ```
 ENOSPC: System limit for number of file watchers reached
 ```
@@ -72,11 +74,19 @@ to increase the number of file watchers
 
 Follow the steps in "Run Django App" to start the server
 
+### Not enough memory / no directory
+This is because NPM isn't too fond of shared folders on Virtualbox. To workaround this, you'll need to create a symlink to a node_modules _outside_ the shared folder. Inside the `client/` folder, run 
+```
+mkdir /home/vagrant/node_modules
+ln -s /home/vagrant/node_modules/ node_modules
+```
+
+
 To start the frontend, navigate to the client folder and run,
 ```
 npm start
 ```
-*Note your MongoDB instance must be running for the app to work
+* Note your MongoDB instance must be running for the app to work
 
 The decoded data will appear at localhost:3000/api/can_server/decoded
 and raw data will appear at localhost:3000/api/can_server/raw
