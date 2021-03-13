@@ -1,0 +1,69 @@
+{
+	"info": {
+		"_postman_id": "3eac0ef4-9b4b-4a7b-919c-b24979145373",
+		"name": "Django CAN",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Decoded Data",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"Datetime\": \"2020-01-20 16:15:07\",\r\n    \"Name\": \"MOTOR_CONTROLLER_VC\",\r\n    \"Sender\": \"MOTOR_CONTROLLER\",\r\n    \"Data\": {\"mc_voltage1\":\"1234\", \"mc_current1\":\"1\"}\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8000/api/can_server/decoded",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"can_server",
+						"decoded"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Raw Data",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"Timestamp\": 3.3,\r\n    \"ArbitrationID\": 257,\r\n    \"DLC\": 7,\r\n    \"Data\": 88\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8000/api/can_server/raw",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"can_server",
+						"raw"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

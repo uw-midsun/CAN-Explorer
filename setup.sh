@@ -11,3 +11,13 @@ echo "mongodb-org-server hold" | sudo dpkg --set-selections
 echo "mongodb-org-shell hold" | sudo dpkg --set-selections
 echo "mongodb-org-mongos hold" | sudo dpkg --set-selections
 echo "mongodb-org-tools hold" | sudo dpkg --set-selections
+
+curl -sL https://deb.nodesource.com/setup_14.x | sudo -E bash -
+sudo apt -y install nodejs
+sudo apt -y install build-essential
+
+sudo add-apt-repository ppa:chris-lea/redis-server
+sudo apt-get update
+sudo apt -y install redis-server
+
+sudo systemctl enable mongod
