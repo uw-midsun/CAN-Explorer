@@ -72,7 +72,7 @@ Next you'll have to edit the systemd redis service file so the PID can correctly
 sudo nano /etc/systemd/system/redis.service
 ```
 
-The start of the service section should look like this
+Replace start of the service section with this
 ```
 [Service]
 Type=forking
