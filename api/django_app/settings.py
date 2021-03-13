@@ -24,7 +24,6 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'channels',
-    'can_server',
     'can_server.apps.CanServerConfig',
     'rest_framework',
     'corsheaders',
