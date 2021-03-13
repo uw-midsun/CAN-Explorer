@@ -1,9 +1,7 @@
-from django.urls import path
-
-from . import views
+from django.conf.urls import url
+from can_server import views
 
 urlpatterns = [
-    path('', views.index, name='index'),
-    # path('converted', views.start, name='converted'),
-    # path('raw', views.raw, name='raw'),
+    url(r'^api/can_server/raw$', views.can_msg_raw),
+    url(r'^api/can_server/decoded$', views.can_msg_decoded)
 ]

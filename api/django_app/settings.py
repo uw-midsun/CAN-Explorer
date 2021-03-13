@@ -11,7 +11,7 @@ SECRET_KEY = 'django-insecure-ge$w%*5-c=9u5$zr5rvgua$*c66tm*79ew!u9rr+zahhs_g=fm
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['192.168.24.24']
+ALLOWED_HOSTS = ['192.168.24.24', 'localhost']
 
 
 # Application definition
@@ -25,6 +25,9 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'channels',
     'can_server',
+    'can_server.apps.CanServerConfig',
+    'rest_framework',
+    'corsheaders',
 ]
 
 CHANNEL_LAYERS = {
@@ -50,12 +53,18 @@ ASGI_APPLICATION = "django_app.asgi.application"
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+CORS_ORIGIN_ALLOW_ALL = False
+CORS_ORIGIN_WHITELIST = (
+    'http://localhost:3000',
+)
 
 ROOT_URLCONF = 'django_app.urls'
 
@@ -78,7 +87,14 @@ TEMPLATES = [
 WSGI_APPLICATION = 'django_app.wsgi.application'
 
 # Database (Mongo)
-DATABASES = {'default': {'ENGINE': 'djongo', 'NAME': 'your-db-name', }}
+DATABASES = {
+    'default': {
+        'ENGINE': 'djongo',
+        'NAME': 'can_data_db', 
+        'HOST': 'localhost', 
+        'PORT': 27017,
+    }
+}
 
 
 # Password validation
