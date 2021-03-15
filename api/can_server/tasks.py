@@ -9,7 +9,9 @@ import os
 from asgiref.sync import async_to_sync
 from channels.layers import get_channel_layer
 from celery import shared_task
+# from ..django_app.celery import app
 import asyncio
+
 # from celery.task.schedules import crontab
 # from celery.decorators import periodic_task
 # from celery.utils.log import get_task_logger
@@ -27,7 +29,7 @@ def task_decode_send():
     decode_and_send()
     # logger.info("Sent CAN data")
 
-
+@shared_task
 def decode_and_send():
     message = can_bus.recv()
     decoded = db.decode_message(message.arbitration_id, message.data)
