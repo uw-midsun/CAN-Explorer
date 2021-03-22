@@ -21,7 +21,7 @@ jobs:
 
       - uses: actions/setup-node@v2
         with:
-          node-version: '12'
+          node-version: '15'
 
       - name: Install pipenv
         run: |
@@ -29,22 +29,17 @@ jobs:
           pip3 install --user pylint
           pip3 install --user autopep8
 
-      - name: Install MongoDB
+      - name: Setup Redis, Mongo 
         run: |
           bash mongo_setup.sh
 
-      - name: Install Redis
-          sudo add-apt-repository ppa:chris-lea/redis-server
-          sudo apt-get update
-          sudo apt -y install redis-server
-
       - name: Install backend dependencies 
         run: |
-          cd backend
+          cd api
           pipenv install
 
       - name: Install frontend dependencies
         run: |
-          cd ~
-          cd frontend 
+          cd ..
+          cd client 
           npm install

@@ -44,3 +44,5 @@ vagrant reload && vagrant ssh
 ```
 
 And you should be good to go! 
+
+export DJANGO_SETTINGS_MODULE=django_app.settings
