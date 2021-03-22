@@ -32,7 +32,7 @@ jobs:
 
       - name: Setup Redis, Mongo 
         run: |
-          bash mongo_setup.sh
+          bash setup.sh
 
       - name: Install backend dependencies 
         run: |
