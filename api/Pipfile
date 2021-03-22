@@ -18,9 +18,6 @@ redis = "==3.5.3"
 djangorestframework = "==3.12.2"
 django-cors-headers = "==3.7.0"
 django-jsonfield = "==1.4.1"
-pylint = "==2.7.2"
-autopep8 = "==1.5.4"
-pylint-django = "==2.4.2"
 
 [dev-packages]
 
@@ -33,5 +30,7 @@ worker = "celery -A django_app worker -l DEBUG -P solo"
 beat = "celery -A django_app beat -l DEBUG"
 makemigrations = "python3 manage.py makemigrations"
 migrate = "python3 manage.py migrate"
+tests = "python3 manage.py test"
 shell = "python3 manage.py shell"
 mock_data = "python3 mock_can_data.py"
+lint = "pylint *.py --load-plugins pylint_django"

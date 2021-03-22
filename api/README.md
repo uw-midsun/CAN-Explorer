@@ -5,6 +5,11 @@ For the first-time setup, at the root folder run
 pipenv install 
 ```
 
+You may also need to export a Django settings environment variable for commands like running the server to work
+```
+export DJANGO_SETTINGS_MODULE=django_app.settings
+```
+
 # Run Django App
 
 You'll need 3 separate terminal shells open (4 if mocking data)

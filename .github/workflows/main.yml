@@ -27,6 +27,7 @@ jobs:
         run: |
           pip3 install --user pipenv
           pip3 install --user pylint
+          pip3 install --user pylint-django
           pip3 install --user autopep8
 
       - name: Setup Redis, Mongo 
@@ -37,9 +38,22 @@ jobs:
         run: |
           cd api
           pipenv install
+          cd ..
+
+      - name: Backend linting + tests
+        run : |
+          cd api
+          pylint *.py --load-plugins pylint_django
+          pipenv run tests
+          cd ..
 
       - name: Install frontend dependencies
         run: |
-          cd ..
           cd client 
           npm install
+          cd ..
+
+      - name: Frontend linting + tests
+        run: |
+          cd client  
+

@@ -86,3 +86,5 @@ source /home/vagrant/.bashrc
 nvm install 15.8.0
 
 sudo -H pip install honcho
+sudo -H pip install pylint-django
+
