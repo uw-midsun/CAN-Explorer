@@ -32,12 +32,14 @@ def can_msg_raw(request):
         count = CanServerRaw.objects.all().delete()
         return JsonResponse({'message': '{} messages were deleted successfully'.format(count[0])}, status=status.HTTP_204_NO_CONTENT)
 
+
 @api_view(['GET', 'POST', 'DELETE'])
 def can_msg_decoded(request):
     if request.method == 'GET':
         # Gets all objects from CanServerDecoded collection
         can_msg_data = CanServerDecoded.objects.all()
-        decoded_serializer = CanServerDecodedSerializer(can_msg_data, many=True)
+        decoded_serializer = CanServerDecodedSerializer(
+            can_msg_data, many=True)
         # Deserialize data to view in frontend
         return JsonResponse(decoded_serializer.data, safe=False)
     # POST method will be removed once celery worker/websockets is merged but I needed a way to test django model fields

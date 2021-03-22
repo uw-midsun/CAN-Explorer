@@ -5,7 +5,6 @@ from django.conf.urls import url
 from channels.security.websocket import AllowedHostsOriginValidator
 
 
-
 # channel_routing = {
 #     'websocket.connect': ws_connect,
 #     # 'websocket.receive': ws_message,
@@ -14,11 +13,11 @@ from channels.security.websocket import AllowedHostsOriginValidator
 
 # TODO check if still needed
 application = ProtocolTypeRouter({
-  'websocket': AllowedHostsOriginValidator(
-    URLRouter(
-      [
-        url("", ConvertConsumer)
-      ]
+    'websocket': AllowedHostsOriginValidator(
+        URLRouter(
+            [
+                url("", ConvertConsumer)
+            ]
+        )
     )
-  )
 })

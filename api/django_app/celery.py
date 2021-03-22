@@ -17,15 +17,18 @@ app.config_from_object(settings, namespace='CELERY')
 
 app.autodiscover_tasks()
 
+
 @app.task(bind=True)
 def debug_task(self):
     print('Request: {0!r}'.format(self.request))
+
 
 @app.on_after_configure.connect
 def task_decode_send(sender, **kwargs):
     sender.add_periodic_task(3, decode_and_send, name='decode_send')
     # decode_and_send()
     # logger.info("Sent CAN data")
+
 
 if __name__ == '__main__':
     app.start()

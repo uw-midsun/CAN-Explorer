@@ -24,10 +24,13 @@ db = cantools.database.load_file('system_can.dbc')
 
 # every 2 seconds
 #  @periodic_task(run_every=4, name="task_decode_send", ignore_result=True)
+
+
 @shared_task
 def task_decode_send():
     decode_and_send()
     # logger.info("Sent CAN data")
+
 
 @shared_task
 def decode_and_send():
@@ -55,6 +58,7 @@ def decode_and_send():
                         'sender': sender, 'data': decoded}
 
     async_to_sync(channel_layer.group_send)("converted", {"type": "websocket_receive", 'datetime': time, 'name': name,
-                                                           'sender': sender, 'data': decoded})
+                                                          'sender': sender, 'data': decoded})
 
-    async_to_sync(channel_layer.group_send)("raw", {"type": "websocket_receive", 'timestamp': message.timestamp, 'dlc': message.dlc, 'channel': message.channel, 'data': message.data.decode('utf-8', 'replace')})
+    async_to_sync(channel_layer.group_send)("raw", {"type": "websocket_receive", 'timestamp': message.timestamp,
+                                                    'dlc': message.dlc, 'channel': message.channel, 'data': message.data.decode('utf-8', 'replace')})
