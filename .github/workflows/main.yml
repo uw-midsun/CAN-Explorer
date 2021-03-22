@@ -63,6 +63,7 @@ jobs:
       - name: Backend linting + tests
         run : |
           cd api
+          pipenv shell
           pylint *.py --load-plugins pylint_django
           pipenv run tests
           cd ..
