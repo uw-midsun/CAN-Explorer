@@ -29,9 +29,11 @@ jobs:
           pip3 install --user pylint
           pip3 install --user pylint-django
           pip3 install --user autopep8
+          export PATH=/home/runner/.local/bin/:$PATH
 
       - name: Force PATH to update
-        run: hash -r
+        run: |
+          hash -r
 
       - name: Setup vcan
         run : |
