@@ -25,11 +25,10 @@ jobs:
 
       - name: Install pipenv
         run: |
-          pip3 install --user pipenv
-          pip3 install --user pylint
-          pip3 install --user pylint-django
-          pip3 install --user autopep8
-          export PATH=/home/runner/.local/bin/:$PATH
+          sudo -H pip3 install -U pipenv
+          sudo -H pip3 install -U pylint
+          sudo -H pip3 install -U pylint-django
+          sudo -H pip3 install -U autopep8
 
       - name: Force PATH to update
         run: |
