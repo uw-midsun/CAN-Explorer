@@ -23,6 +23,10 @@ jobs:
         with:
           node-version: '15'
 
+      - name: Setup tmate session
+        if: ${{ failure() }}
+        uses: mxschmitt/action-tmate@v3
+
       - name: Install pipenv
         run: |
           sudo -H pip3 install -U pipenv
