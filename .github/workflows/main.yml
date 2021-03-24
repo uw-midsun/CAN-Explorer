@@ -74,7 +74,8 @@ jobs:
       - name: Backend linting + tests
         run : |
           cd api
-          pylint *.py --load-plugins pylint_django
+          export DJANGO_SETTINGS_MODULE=django_app.settings
+          pipenv run pylint *.py --load-plugins pylint_django
           pipenv run tests
           cd ..
 
