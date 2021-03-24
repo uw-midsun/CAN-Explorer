@@ -23,16 +23,13 @@ jobs:
         with:
           node-version: '15'
 
-      - name: Setup tmate session
-        if: ${{ failure() }}
-        uses: mxschmitt/action-tmate@v3
-
       - name: Install pipenv
         run: |
           sudo -H pip3 install -U pipenv
           sudo -H pip3 install -U pylint
           sudo -H pip3 install -U pylint-django
           sudo -H pip3 install -U autopep8
+          sudo -H pip3 install -U django==3.0.5
 
       - name: Force PATH to update
         run: |
@@ -69,6 +66,7 @@ jobs:
         run: |
           cd api
           pipenv install
+          pipenv graph
           cd ..
 
       - name: Backend linting + tests
