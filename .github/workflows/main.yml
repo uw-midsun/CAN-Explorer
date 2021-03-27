@@ -29,7 +29,6 @@ jobs:
           sudo -H pip3 install -U pylint
           sudo -H pip3 install -U pylint-django
           sudo -H pip3 install -U autopep8
-          sudo -H pip3 install -U django==3.0.5
 
       - name: Force PATH to update
         run: |
@@ -67,6 +66,7 @@ jobs:
           cd api
           pipenv install
           pipenv graph
+          ls -al
           cd ..
 
       - name: Backend linting + tests
