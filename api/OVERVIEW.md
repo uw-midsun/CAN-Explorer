@@ -15,9 +15,3 @@ Note: All of the following endpoints are prefixed with `ws://`
 `ws/can_server/converted` is a websocket that sends converted CAN data 
 
 `ws/can_server/raw` is a websocket that sends raw CAN data 
-
-
-
-
-
-

@@ -30,12 +30,12 @@ INSTALLED_APPS = [
 ]
 
 CHANNEL_LAYERS = {
-  "default": {
-    "BACKEND": "channels_redis.core.RedisChannelLayer",
-    "CONFIG": {
-      "hosts": [("127.0.0.1", 6379)],
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [("127.0.0.1", 6379)],
+        },
     },
-  },
 }
 
 # CELERY STUFF
@@ -45,7 +45,7 @@ CELERY_ACCEPT_CONTENT = ['application/json']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
 CELERY_TIMEZONE = 'UTC'
-CELERY_ENABLE_UTC=True
+CELERY_ENABLE_UTC = True
 
 
 ASGI_APPLICATION = "django_app.asgi.application"
@@ -90,8 +90,8 @@ WSGI_APPLICATION = 'django_app.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'djongo',
-        'NAME': 'can_data_db', 
-        'HOST': 'localhost', 
+        'NAME': 'can_data_db',
+        'HOST': 'localhost',
         'PORT': 27017,
     }
 }
