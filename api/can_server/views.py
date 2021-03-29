@@ -56,3 +56,6 @@ def can_msg_decoded(request):
     elif request.method == 'DELETE':
         count = CanServerDecoded.objects.all().delete()
         return JsonResponse({'message': '{} messages were deleted successfully'.format(count[0])}, status=status.HTTP_204_NO_CONTENT)
+
+def test_ws(request):
+    return render(request, 'frontend.html')

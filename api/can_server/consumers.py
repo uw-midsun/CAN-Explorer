@@ -43,6 +43,7 @@ class ConvertConsumer(WebsocketConsumer):
 class RawConsumer(WebsocketConsumer):
     def websocket_connect(self, event):
         print('connected', event)
+        print(self)
         async_to_sync(self.channel_layer.group_add)("raw", self.channel_name)
         self.accept()
 

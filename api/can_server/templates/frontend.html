@@ -14,6 +14,7 @@
     var should_convert = true;
 
     convert_socket.onopen = function open() {
+      console.log(window.location.host)
       console.log('Converted CAN WebSockets connection created.');
     };
 
@@ -35,6 +36,8 @@
 
     // raw can websocket logic
     raw_socket.onopen = function open() {
+      console.log(window.location.host)
+      console.log('ws://' + window.location.host + "/ws/can_server/converted");
       console.log('Raw CAN WebSockets connection created.');
     };
 

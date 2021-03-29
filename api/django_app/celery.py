@@ -24,10 +24,8 @@ def debug_task(self):
 
 
 @app.on_after_configure.connect
-def task_decode_send(sender, **kwargs):
-    sender.add_periodic_task(3, decode_and_send, name='decode_send')
-    # decode_and_send()
-    # logger.info("Sent CAN data")
+def test(sender, **kwargs):
+    sender.add_periodic_task(10, decode_and_send, name='decode_send')
 
 
 if __name__ == '__main__':

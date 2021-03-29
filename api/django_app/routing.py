@@ -16,7 +16,7 @@ application = ProtocolTypeRouter({
     'websocket': AllowedHostsOriginValidator(
         URLRouter(
             [
-                url("", ConvertConsumer)
+                # url("", ConvertConsumer)
             ]
         )
     )
