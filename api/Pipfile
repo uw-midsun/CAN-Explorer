@@ -18,6 +18,7 @@ redis = "==3.5.3"
 djangorestframework = "==3.12.2"
 django-cors-headers = "==3.7.0"
 django-picklefield = "==3.0.1"
+pymongo = "*"
 
 [dev-packages]
 

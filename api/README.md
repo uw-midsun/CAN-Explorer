@@ -2,7 +2,7 @@
 
 For the first-time setup, at the root folder run
 ```
-pipenv install 
+pipenv install
 ```
 
 # Run Django App
