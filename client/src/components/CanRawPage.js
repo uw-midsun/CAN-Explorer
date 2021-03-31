@@ -1,8 +1,48 @@
 import React, { useEffect, useRef, useState } from "react";
+import { useTable } from 'react-table'
+import { VictoryBar, VictoryChart } from 'victory'
 
 export default function CanRawPage() {
   const [rawData, setRawData] = useState([]);
   const [count, setCount] = useState(0);
+  const [showGraph, setShowGraph] = useState(false);
+
+  const data = React.useMemo(
+    () => rawData,
+    [rawData]
+  )
+
+  const columns = React.useMemo(
+    () => [
+      {
+        Header: "Channel",
+        accessor: "channel"
+      },
+      {
+        Header: "Data",
+        accessor: "data"
+      },
+      {
+        Header: "DLC",
+        accessor: "dlc"
+      },
+      {
+        Header: "Time Stamp",
+        accessor: "timestamp"
+      },
+    ],
+    []
+  )
+
+
+
+  const {
+    getTableProps,
+    getTableBodyProps,
+    headerGroups,
+    rows,
+    prepareRow,
+  } = useTable({ columns, data })
 
   //var convert_socket = new WebSocket("wss://localhost:8000/ws/can_server/converted");
   var raw_socket = useRef(null);
@@ -37,11 +77,20 @@ export default function CanRawPage() {
       //console.log(e)
       console.log(rawData);
       console.log(JSON.parse(e.data));
-      let new_data = JSON.parse(e.data);
+      let obj = JSON.parse(e.data);
+
+      let new_data = {
+        "channel": obj.channel,
+        "data": obj.data,
+        "dlc": obj.dlc,
+        "timestamp": obj.timestamp,
+      }
+
       //let new_list = rawData;
       //new_list.push(new_data)
       //new_data = rawData.concat({ new_data });
       setRawData([...rawData, new_data]);
+      //data.push(new_data)
       //console.log("yeet");
     }
   });
@@ -104,12 +153,12 @@ export default function CanRawPage() {
     <div className="max-w-full flex-row">
       <div className="flex-row">
         <button> Table view </button>
-        <button> Graph view </button>
+        <button onClick={() => setShowGraph(!showGraph)}> Graph view </button>
       </div>
 
       <div className="flex">
         {/* Table view */}
-        <table className="border-black border-solid border-2 w-full">
+        {/* <table className="border-black border-solid border-2 w-full">
           <tr>
             <th>Channel</th>
             <th>Data</th>
@@ -126,7 +175,67 @@ export default function CanRawPage() {
               </tr>
             );
           })}
-        </table>
+        </table> */}
+
+        {showGraph ?
+          <VictoryChart
+          domainPadding={20}
+          >
+            <VictoryBar
+              data={data}
+              // TODO temp axis variables 
+              x="data"
+              y="dlc"
+            />
+          </VictoryChart>
+
+          :
+          <table {...getTableProps()} style={{ border: 'solid 1px blue' }}>
+            <thead>
+              {headerGroups.map(headerGroup => (
+                <tr {...headerGroup.getHeaderGroupProps()}>
+                  {headerGroup.headers.map(column => (
+                    <th
+                      {...column.getHeaderProps()}
+                      style={{
+                        borderBottom: 'solid 3px red',
+                        background: 'aliceblue',
+                        color: 'black',
+                        fontWeight: 'bold',
+                      }}
+                    >
+                      {column.render('Header')}
+                    </th>
+                  ))}
+                </tr>
+              ))}
+            </thead>
+            <tbody {...getTableBodyProps()}>
+              {rows.map(row => {
+                prepareRow(row)
+                return (
+                  <tr {...row.getRowProps()}>
+                    {row.cells.map(cell => {
+                      return (
+                        <td
+                          {...cell.getCellProps()}
+                          style={{
+                            padding: '10px',
+                            border: 'solid 1px gray',
+                            background: 'papayawhip',
+                          }}
+                        >
+                          {cell.render('Cell')}
+                        </td>
+                      )
+                    })}
+                  </tr>
+                )
+              })}
+            </tbody>
+          </table>
+        }
+
 
         {/* Graph view */}
       </div>

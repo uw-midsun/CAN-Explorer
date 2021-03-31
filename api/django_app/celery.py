@@ -25,7 +25,8 @@ def debug_task(self):
 
 @app.on_after_configure.connect
 def test(sender, **kwargs):
-    sender.add_periodic_task(10, decode_and_send, name='decode_send')
+    # first parameter signifies timeout of polling. 
+    sender.add_periodic_task(1, decode_and_send, name='decode_send')
 
 
 if __name__ == '__main__':
