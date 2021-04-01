@@ -86,6 +86,6 @@ curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.37.2/install.sh | bash
 source /home/vagrant/.bashrc
 nvm install 15.8.0
 
-sudo -H pip install honcho
-sudo -H pip install pylint-django
+sudo -H pip3 install honcho
+sudo -H pip3 install pylint-django
 

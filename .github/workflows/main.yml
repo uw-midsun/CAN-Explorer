@@ -71,26 +71,20 @@ jobs:
       # - run: echo "mongodb-org-tools hold" | sudo dpkg --set-selections
 
       #- name: Install backend dependencies 
-      - run: cd api
-      - run: pipenv install
-      - run: pipenv graph
+      - run: cd api && pipenv lock -r > requirements.txt
+      - run: cd api && pip3 install -r requirements.txt
       - run: ls -al
       - run: sudo systemctl start mongod
-      - run: cd ..
 
       #- name: Backend linting + tests
-      - run: cd api
-      - run: export DJANGO_SETTINGS_MODULE=django_app.settings
-      - run: pipenv run pylint *.py --load-plugins pylint_django
-      - run: pipenv run tests
-      - run: cd ..
+      - run: echo "DJANGO_SETTINGS_MODULE=django_app.settings" >> $GITHUB_ENV
+      - run: cd api && pylint *.py --load-plugins pylint_django
+      - run: cd api && python3 manage.py test
 
       #- name: Install frontend dependencies
-      - run: cd client 
-      - run: npm install
-      - run: cd ..
+      - run: cd client && npm install
 
       #- name: Frontend linting + tests
-      - run: cd client  
-      - run: cd ..
+      # - run: cd client  
+      # - run: cd ..
 
