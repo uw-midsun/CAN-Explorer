@@ -27,9 +27,6 @@ jobs:
       
       # - name: Install pipenv
       - run: sudo -H pip3 install -U pipenv
-      - run: sudo -H pip3 install -U pylint
-      - run: sudo -H pip3 install -U pylint-django
-      - run: sudo -H pip3 install -U autopep8
 
       - uses: actions/setup-node@v2
         with:
@@ -72,14 +69,15 @@ jobs:
 
       #- name: Install backend dependencies 
       # - run: cd api && pipenv lock -r > requirements.txt
-      - run: cd api && sudo -H pip3 install -r requirements.txt
+      # - run: cd api && sudo -H pip3 install -r requirements.txt
+      - run: cd api && pipenv install
       - run: ls -al
       - run: sudo systemctl start mongod
 
       #- name: Backend linting + tests
       - run: echo "DJANGO_SETTINGS_MODULE=django_app.settings" >> $GITHUB_ENV
-      - run: cd api && pylint *.py --load-plugins pylint_django
-      - run: cd api && python3 manage.py test
+      - run: cd api && pipenv run python -m pylint *.py --load-plugins pylint_django --django-settings-module=django_app.settings
+      - run: cd api && pipenv run test
 
       #- name: Install frontend dependencies
       - run: cd client && npm install
