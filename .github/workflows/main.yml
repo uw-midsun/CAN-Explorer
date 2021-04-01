@@ -72,7 +72,7 @@ jobs:
 
       #- name: Install backend dependencies 
       # - run: cd api && pipenv lock -r > requirements.txt
-      - run: cd api && sudo pip3 -H install -r requirements.txt
+      - run: cd api && sudo -H pip3 install -r requirements.txt
       - run: ls -al
       - run: sudo systemctl start mongod
 
