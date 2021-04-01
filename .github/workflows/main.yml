@@ -42,8 +42,6 @@ jobs:
       - run: sudo apt -y install redis-server
       - run: sudo sed -i "s/^supervised.*/supervised systemd/" /etc/redis/redis.conf
       - run: printf "[Unit]\nDescription=Advanced key-value store\nAfter=network.target\nDocumentation=http://redis.io/documentation, man:redis-server(1)\n\n[Service]\nType=forking\nExecStart=/usr/bin/redis-server /etc/redis/redis.conf\nExecStop=/bin/kill -s TERM $MAINPID\nExecStartPost=/bin/sh -c 'echo $MAINPID > /var/run/redis/redis.pid'\nPIDFile=/run/redis/redis-server.pid\nTimeoutStopSec=0\nRestart=always\nUser=redis\nGroup=redis\nRuntimeDirectory=redis\nRuntimeDirectoryMode=2755\n\nUMask=007\nPrivateTmp=yes\nLimitNOFILE=65535\nPrivateDevices=yes\nProtectHome=yes\nReadOnlyDirectories=/\nReadWriteDirectories=-/var/lib/redis\nReadWriteDirectories=-/var/log/redis\nReadWriteDirectories=-/var/run/redis\n\nNoNewPrivileges=true\nCapabilityBoundingSet=CAP_SETGID CAP_SETUID CAP_SYS_RESOURCE\nRestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX\nMemoryDenyWriteExecute=true\nProtectKernelModules=true\nProtectKernelTunables=true\nProtectControlGroups=true\nRestrictRealtime=true\nRestrictNamespaces=true\n\n# redis-server can write to its own config file when in cluster mode so we\n# permit writing there by default. If you are not using this feature, it is\n# recommended that you replace the following lines with "ProtectSystem=full".\nProtectSystem=true\nReadWriteDirectories=-/etc/redis\n\n[Install]\nWantedBy=multi-user.target\nAlias=redis.service" | sudo tee /etc/systemd/system/redis.service
-      - run: sudo systemctl daemon-reload
-      - run: sudo systemctl restart redis.service
       
       #- name: Setup Mongo
       - run: wget -qO - https://www.mongodb.org/static/pgp/server-4.4.asc | sudo apt-key add -
