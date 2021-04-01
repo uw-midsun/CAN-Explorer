@@ -19,24 +19,24 @@ jobs:
         with:
           python-version: '3.6'
       
-      - name: Install pipenv
+      # - name: Install pipenv
       - run: sudo -H pip3 install -U pipenv
       - run: sudo -H pip3 install -U pylint
       - run: sudo -H pip3 install -U pylint-django
       - run: sudo -H pip3 install -U autopep8
 
-      - uses: actions/setup-node@v2
+      #- uses: actions/setup-node@v2
         with:
           node-version: '15'
 
-      - name: Force PATH to update
-        run: hash -r
+      #- name: Force PATH to update
+      - run: hash -r
 
-      - name: Setup vcan
+      #- name: Setup vcan
       - run: sudo apt-get install linux-modules-extra-$(uname -r)
       - run: sudo modprobe vcan && sudo ip link add dev vcan0 type vcan && sudo ip link set up vcan0
 
-      - name: Setup Redis
+      #- name: Setup Redis
       - run: sudo add-apt-repository ppa:chris-lea/redis-server -y
       - run: sudo apt-get update
       - run: sudo apt -y install redis-server
@@ -46,7 +46,7 @@ jobs:
       - run: sudo systemctl daemon-reload
       - run: sudo systemctl restart redis.service
       
-      - name: Setup Mongo
+      #- name: Setup Mongo
       - run: wget -qO - https://www.mongodb.org/static/pgp/server-4.4.asc | sudo apt-key add -
       - run: echo "deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/ubuntu bionic/mongodb-org/4.4 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-4.4.list
       - run: sudo apt-get update
@@ -57,7 +57,7 @@ jobs:
       - run: echo "mongodb-org-mongos hold" | sudo dpkg --set-selections
       - run: echo "mongodb-org-tools hold" | sudo dpkg --set-selections
 
-      - name: Install backend dependencies 
+      #- name: Install backend dependencies 
       - run: cd api
       - run: pipenv install
       - run: pipenv graph
@@ -66,19 +66,19 @@ jobs:
       - run: sudo systemctl start redis.service
       - run: cd ..
 
-      - name: Backend linting + tests
+      #- name: Backend linting + tests
       - run: cd api
       - run: export DJANGO_SETTINGS_MODULE=django_app.settings
       - run: pipenv run pylint *.py --load-plugins pylint_django
       - run: pipenv run tests
       - run: cd ..
 
-      - name: Install frontend dependencies
+      #- name: Install frontend dependencies
       - run: cd client 
       - run: npm install
       - run: cd ..
 
-      - name: Frontend linting + tests
+      #- name: Frontend linting + tests
       - run: cd client  
       - run: cd ..
 
