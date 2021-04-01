@@ -24,6 +24,7 @@ sudo apt -y install redis-server
 
 # change supervision setting to use systemd
 sudo sed -i "s/^supervised.*/supervised systemd/" /etc/redis/redis.conf
+sudo systemctl enable redis-server
 
 : '
 The following command is condensed form of editing /etc/systemd/system/redis.service to ...
