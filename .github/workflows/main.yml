@@ -12,12 +12,18 @@ on:
 jobs:
   build:
     runs-on: ubuntu-18.04
+    strategy:
+      matrix:
+        node-version: [15.x]
+        redis-version: [6]
+        python-version: [3.6]
+        mongodb-version: [4.4]
     steps:
       - uses: actions/checkout@v2
 
       - uses: actions/setup-python@v2
         with:
-          python-version: '3.6'
+          python-version: ${{ matrix.python-version }}
       
       # - name: Install pipenv
       - run: sudo -H pip3 install -U pipenv
@@ -27,7 +33,17 @@ jobs:
 
       - uses: actions/setup-node@v2
         with:
-          node-version: '15'
+          node-version: ${{ matrix.node-version }}
+
+      #- name: Redis Server in GitHub Actions
+      - uses: supercharge/redis-github-action@1.1.0
+        with:
+          redis-version: ${{ matrix.redis-version }}
+
+      #- name: Start MongoDB
+      - uses: supercharge/mongodb-github-action@1.3.0
+        with:
+          mongodb-version: ${{ matrix.mongodb-version }}
 
       #- name: Force PATH to update
       - run: hash -r
@@ -37,22 +53,22 @@ jobs:
       - run: sudo modprobe vcan && sudo ip link add dev vcan0 type vcan && sudo ip link set up vcan0
 
       #- name: Setup Redis
-      - run: sudo add-apt-repository ppa:chris-lea/redis-server -y
-      - run: sudo apt-get update
-      - run: sudo apt -y install redis-server
-      - run: sudo sed -i "s/^supervised.*/supervised systemd/" /etc/redis/redis.conf
-      - run: printf "[Unit]\nDescription=Advanced key-value store\nAfter=network.target\nDocumentation=http://redis.io/documentation, man:redis-server(1)\n\n[Service]\nType=forking\nExecStart=/usr/bin/redis-server /etc/redis/redis.conf\nExecStop=/bin/kill -s TERM $MAINPID\nExecStartPost=/bin/sh -c 'echo $MAINPID > /var/run/redis/redis.pid'\nPIDFile=/run/redis/redis-server.pid\nTimeoutStopSec=0\nRestart=always\nUser=redis\nGroup=redis\nRuntimeDirectory=redis\nRuntimeDirectoryMode=2755\n\nUMask=007\nPrivateTmp=yes\nLimitNOFILE=65535\nPrivateDevices=yes\nProtectHome=yes\nReadOnlyDirectories=/\nReadWriteDirectories=-/var/lib/redis\nReadWriteDirectories=-/var/log/redis\nReadWriteDirectories=-/var/run/redis\n\nNoNewPrivileges=true\nCapabilityBoundingSet=CAP_SETGID CAP_SETUID CAP_SYS_RESOURCE\nRestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX\nMemoryDenyWriteExecute=true\nProtectKernelModules=true\nProtectKernelTunables=true\nProtectControlGroups=true\nRestrictRealtime=true\nRestrictNamespaces=true\n\n# redis-server can write to its own config file when in cluster mode so we\n# permit writing there by default. If you are not using this feature, it is\n# recommended that you replace the following lines with "ProtectSystem=full".\nProtectSystem=true\nReadWriteDirectories=-/etc/redis\n\n[Install]\nWantedBy=multi-user.target\nAlias=redis.service" | sudo tee /etc/systemd/system/redis.service
+      # - run: sudo add-apt-repository ppa:chris-lea/redis-server -y
+      # - run: sudo apt-get update
+      # - run: sudo apt -y install redis-server
+      # - run: sudo sed -i "s/^supervised.*/supervised systemd/" /etc/redis/redis.conf
+      # - run: printf "[Unit]\nDescription=Advanced key-value store\nAfter=network.target\nDocumentation=http://redis.io/documentation, man:redis-server(1)\n\n[Service]\nType=forking\nExecStart=/usr/bin/redis-server /etc/redis/redis.conf\nExecStop=/bin/kill -s TERM $MAINPID\nExecStartPost=/bin/sh -c 'echo $MAINPID > /var/run/redis/redis.pid'\nPIDFile=/run/redis/redis-server.pid\nTimeoutStopSec=0\nRestart=always\nUser=redis\nGroup=redis\nRuntimeDirectory=redis\nRuntimeDirectoryMode=2755\n\nUMask=007\nPrivateTmp=yes\nLimitNOFILE=65535\nPrivateDevices=yes\nProtectHome=yes\nReadOnlyDirectories=/\nReadWriteDirectories=-/var/lib/redis\nReadWriteDirectories=-/var/log/redis\nReadWriteDirectories=-/var/run/redis\n\nNoNewPrivileges=true\nCapabilityBoundingSet=CAP_SETGID CAP_SETUID CAP_SYS_RESOURCE\nRestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX\nMemoryDenyWriteExecute=true\nProtectKernelModules=true\nProtectKernelTunables=true\nProtectControlGroups=true\nRestrictRealtime=true\nRestrictNamespaces=true\n\n# redis-server can write to its own config file when in cluster mode so we\n# permit writing there by default. If you are not using this feature, it is\n# recommended that you replace the following lines with "ProtectSystem=full".\nProtectSystem=true\nReadWriteDirectories=-/etc/redis\n\n[Install]\nWantedBy=multi-user.target\nAlias=redis.service" | sudo tee /etc/systemd/system/redis.service
       
       #- name: Setup Mongo
-      - run: wget -qO - https://www.mongodb.org/static/pgp/server-4.4.asc | sudo apt-key add -
-      - run: echo "deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/ubuntu bionic/mongodb-org/4.4 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-4.4.list
-      - run: sudo apt-get update
-      - run: sudo apt-get install -y mongodb-org
-      - run: echo "mongodb-org hold" | sudo dpkg --set-selections
-      - run: echo "mongodb-org-server hold" | sudo dpkg --set-selections
-      - run: echo "mongodb-org-shell hold" | sudo dpkg --set-selections
-      - run: echo "mongodb-org-mongos hold" | sudo dpkg --set-selections
-      - run: echo "mongodb-org-tools hold" | sudo dpkg --set-selections
+      # - run: wget -qO - https://www.mongodb.org/static/pgp/server-4.4.asc | sudo apt-key add -
+      # - run: echo "deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/ubuntu bionic/mongodb-org/4.4 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-4.4.list
+      # - run: sudo apt-get update
+      # - run: sudo apt-get install -y mongodb-org
+      # - run: echo "mongodb-org hold" | sudo dpkg --set-selections
+      # - run: echo "mongodb-org-server hold" | sudo dpkg --set-selections
+      # - run: echo "mongodb-org-shell hold" | sudo dpkg --set-selections
+      # - run: echo "mongodb-org-mongos hold" | sudo dpkg --set-selections
+      # - run: echo "mongodb-org-tools hold" | sudo dpkg --set-selections
 
       #- name: Install backend dependencies 
       - run: cd api
