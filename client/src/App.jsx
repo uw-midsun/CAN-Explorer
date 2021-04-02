@@ -7,6 +7,7 @@ function App() {
   return (
     <Router>
       <div className="App">
+      <h1>CAN Explorer</h1>
         <Switch>
           <Route path="/api/can_server/raw" exact component={CanRawPage} />
           <Route path="/api/can_server/decoded" component={CanDecodedPage} />
