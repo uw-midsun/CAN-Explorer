@@ -57,8 +57,17 @@ def decode_and_send():
     can_decoded_data = {'datetime': time, 'name': name,
                         'sender': sender, 'data': decoded}
 
-    async_to_sync(channel_layer.group_send)("converted", {"type": "websocket_receive", 'datetime': time, 'name': name,
-                                                          'sender': sender, 'data': decoded})
+    async_to_sync(channel_layer.group_send)("converted",
+                                            {"type": "websocket_receive",
+                                             'datetime': time,
+                                             'name': name,
+                                             'sender': sender,
+                                             'data': decoded})
 
-    async_to_sync(channel_layer.group_send)("raw", {"type": "websocket_receive", 'timestamp': message.timestamp,
-                                                    'dlc': message.dlc, 'channel': message.channel, 'data': message.data.decode('utf-8', 'replace')})
+    async_to_sync(channel_layer.group_send)("raw",
+                                            {"type": "websocket_receive",
+                                             'timestamp': message.timestamp,
+                                             'dlc': message.dlc,
+                                             'channel': message.channel,
+                                             'data': message.data.decode('utf-8',
+                                                                         'replace')})

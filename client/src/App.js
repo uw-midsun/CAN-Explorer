@@ -1,7 +1,7 @@
 import React from "react";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
-import CanRawPage from "./components/CanRawPage"
-import CanDecodedPage from "./components/CanDecodedPage"
+import CanRawPage from "./components/CanRawPage";
+import CanDecodedPage from "./components/CanDecodedPage";
 
 function App() {
   return (
