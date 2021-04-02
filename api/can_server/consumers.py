@@ -49,8 +49,6 @@ class RawConsumer(WebsocketConsumer):
     def websocket_receive(self, event):
         print(event)
 
-        # Create new list with
-
         can_json_str = json.dumps(event)
         print(can_json_str)
         async_to_sync(self.channel_layer.group_send)(

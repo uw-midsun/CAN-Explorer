@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 
 # MongoDB
-
 wget -qO - https://www.mongodb.org/static/pgp/server-4.4.asc | sudo apt-key add -
 echo "deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/ubuntu bionic/mongodb-org/4.4 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-4.4.list
 
@@ -82,6 +81,7 @@ printf "[Unit]\nDescription=Advanced key-value store\nAfter=network.target\nDocu
 sudo systemctl daemon-reload
 sudo systemctl restart redis.service
 
+# Node
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.37.2/install.sh | bash
 source /home/vagrant/.bashrc
 nvm install 15.8.0

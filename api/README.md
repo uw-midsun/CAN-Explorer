@@ -29,16 +29,6 @@ pipenv run start
 Go to http://192.168.24.24:8000/ in your local browser to check website
 
 ## 2nd shell: Celery worker
-Make sure Redis is started
-```
-sudo systemctl start redis.service
-```
-
-Confirm that Redis is running
-```
-sudo systemctl status redis.service
-```
-
 Then run 
 ```
 pipenv run worker
@@ -49,7 +39,6 @@ Run
 ```
 pipenv run beat
 ```
-
 
 ## (Optional) 4th shell: Mock data
 

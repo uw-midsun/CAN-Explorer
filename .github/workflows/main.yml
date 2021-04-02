@@ -74,7 +74,7 @@ jobs:
       - name: Setup Django ENV var 
         run: echo "DJANGO_SETTINGS_MODULE=django_app.settings" >> $GITHUB_ENV
       - name: Backend Lint
-        run: cd api && pipenv run python -m pylint *.py --load-plugins pylint_django
+        run: cd api && pipenv run python -m flake8 .
       - name: Backend tests
         run: cd api && pipenv run test
 

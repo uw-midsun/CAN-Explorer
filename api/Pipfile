@@ -20,8 +20,8 @@ django-cors-headers = "==3.7.0"
 django-jsonfield = "==1.4.1"
 
 [dev-packages]
-pylint = "==2.7.4"
-pylint-django = "==2.4.2"
+flake8 = "==3.9.0"
+flake8-django = "==1.1.1"
 honcho = "==1.0.1"
 autopep8 = "==1.5.6"
 
@@ -30,6 +30,7 @@ python_version = "3.6"
 
 [scripts]
 start = "python3 manage.py runserver 0.0.0.0:8000"
+startall = "honcho start"
 worker = "celery -A django_app worker -l DEBUG -P solo"
 beat = "celery -A django_app beat -l DEBUG"
 makemigrations = "python3 manage.py makemigrations"
@@ -37,6 +38,6 @@ migrate = "python3 manage.py migrate"
 test = "python3 manage.py test"
 shell = "python3 manage.py shell"
 mock_data = "python3 mock_can_data.py"
-# If below command doesn't work, run "python3 -m pylint *.py --load-plugins pylint_django" instead
-lint = "python3 -m pylint *.py --load-plugins pylint_django"
+# If below command doesn't work, run "pipenv run python3 -m pylint *.py --load-plugins pylint_django" instead
+lint = "python3 -m flake8 ."
 format = "python3 -m autopep8 --in-place --aggressive --aggressive --recursive ."

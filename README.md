@@ -13,15 +13,15 @@ cd CAN-Explorer
 ```
 ## Requirements:
 The Django app requires Python >= 3.6, Pipenv, MongoDB >= 3.6.3 and Redis >= 6.0
-Python3 should be installed in the Vagrant box already, but if you don't have MongoDB...
+Python3 should be installed in the Vagrant box already.
 
 ## Dependencies setup (Mongo, Pipenv, Redis)
-To setup all dependencies for data collection run (only necessary the first time you start working with the database)
+To setup all dependencies (only necessary the first time you start working with the project), run the following in your terminal
 ```
 bash setup.sh
 ```
 
-Verify that the server is active with
+Verify that the MongoDB server is active with
 ```
 sudo systemctl status mongod
 ```
@@ -36,6 +36,16 @@ sudo systemctl start mongod
 and
 ```
 sudo systemctl stop mongod
+```
+
+Make sure Redis is started
+```
+sudo systemctl start redis.service
+```
+
+Confirm that Redis is running
+```
+sudo systemctl status redis.service
 ```
 
 Exit the vagrant shell and reload the box,
