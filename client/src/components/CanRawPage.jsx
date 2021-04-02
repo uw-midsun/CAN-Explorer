@@ -12,37 +12,20 @@ export default function CanRawPage() {
     })
       .then((res) => res.json())
       .then((res) => setRawData(res))
+      // eslint-disable-next-line no-console
       .catch((err) => console.log(err));
   }, []);
-
-  const canObjMap = (data) => {
-    let const pairs = [];
-    let iterator = 0;
-    for (let key in data) {
-      pairs.push(
-        <p key={iterator}>
-          {'- ' + key} : {data[key]}
-        </p>
-      );
-      iterator++;
-    }
-    return pairs;
-  };
 
   return (
     <div>
       {rawData &&
-        rawData.map((msg) => {
-          return (
-            <div key={msg.id}>
-              <p>{'Timestamp: ' + msg.Timestamp}</p>
-              <p>{'Arbitration ID: ' + msg.ArbitrationID}</p>
-              <p>{'DLC: ' + msg.DLC}</p>
-              <p>Data:</p>
-              <div>{canObjMap(msg.Data)}</div>
-            </div>
-          );
-        })}
+        rawData.map((msg) => (
+          <div key={msg.id}>
+            <p>{`Timestamp: ${msg.Timestamp}`}</p>
+            <p>{`Arbitration ID: ${msg.ArbitrationID}`}</p>
+            <p>{`DLC: $${msg.DLC}`}</p>
+          </div>
+        ))}
     </div>
   );
 }

@@ -12,37 +12,20 @@ export default function CanDecodedPage() {
     })
       .then((res) => res.json())
       .then((res) => setDecodedData(res))
+      // eslint-disable-next-line no-console
       .catch((err) => console.log(err));
   }, []);
-
-  const canObjMap = (data) => {
-    let pairs = [];
-    let iterator = 0;
-    for (let key in data) {
-      pairs.push(
-        <p key={iterator}>
-          {'- ' + key} : {data[key]}
-        </p>
-      );
-      iterator++;
-    }
-    return pairs;
-  };
 
   return (
     <div>
       {decodedData &&
-        decodedData.map((msg) => {
-          return (
-            <div key={msg.id}>
-              <p>{'Datetime: ' + msg.Datetime}</p>
-              <p>{'Name: ' + msg.Name}</p>
-              <p>{'Sender: ' + msg.Sender}</p>
-              <p>Data:</p>
-              <div>{canObjMap(msg.Data)}</div>
-            </div>
-          );
-        })}
+        decodedData.map((msg) => (
+          <div key={msg.id}>
+            <p>{`Datetime: ${msg.Datetime}`}</p>
+            <p>{`Name: ${msg.name}`}</p>
+            <p>{`Sender: ${msg.Sender}`}</p>
+          </div>
+        ))}
     </div>
   );
 }
