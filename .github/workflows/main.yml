@@ -56,11 +56,11 @@ jobs:
         with:
           mongodb-version: ${{ matrix.mongodb-version }}
       
-     - name: Start MongoDB
-       run: sudo systemctl start mongod
+      - name: Start MongoDB
+        run: sudo systemctl start mongod
 
-     - name: Force PATH to update
-       run: hash -r
+      - name: Force PATH to update
+        run: hash -r
 
       - name: Install vcan
         run: sudo apt-get install linux-modules-extra-$(uname -r)
