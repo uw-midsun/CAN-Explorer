@@ -77,7 +77,6 @@ jobs:
       #- name: Backend linting + tests
       - run: echo "DJANGO_SETTINGS_MODULE=django_app.settings" >> $GITHUB_ENV
       - run: cd api && pipenv run python -m pylint *.py --load-plugins pylint_django
-      - run: cd api && pipenv run python3 -m autopep8 --in-place --aggressive --aggressive --recursive .
       - run: cd api && pipenv run test
 
       #- name: Install frontend dependencies
