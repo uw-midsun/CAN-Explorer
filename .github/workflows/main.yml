@@ -60,8 +60,8 @@ jobs:
         with:
           path: ~/.local/share/virtualenvs
           key: ${{ runner.os }}-pipenv-${{ hashFiles('**/Pipfile.lock') }}
-        restore-keys:
-          ${{ runner.os }}-pipenv-
+          restore-keys:
+            ${{ runner.os }}-pipenv-
 
       - name: Install backend dependencies 
         run: cd api && pipenv install --dev
@@ -83,8 +83,8 @@ jobs:
           # npm cache files are stored in `~/.npm` on Linux/macOS
           path: ~/.npm
           key: ${{ runner.os }}-node-modules-${{ hashFiles('**/package-lock.json') }}
-        restore-keys:
-          ${{ runner.os }}-node-
+          restore-key:
+            ${{ runner.os }}-node-
 
       - name: Install frontend dependencies
         run: cd client && npm ci
