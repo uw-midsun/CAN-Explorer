@@ -1,11 +1,9 @@
-from django.shortcuts import render
-
 from django.http.response import JsonResponse
 from rest_framework.parsers import JSONParser
 from rest_framework import status
 
 from can_server.models import CanServerRaw, CanServerDecoded
-from can_server.serializers import CanServerRawSerializer, CanServerDecodedSerializer
+from can_server.serializers import CanServerRawSerializer, CanServerDecodedSerializer  # noqa: E501
 from rest_framework.decorators import api_view
 
 
@@ -35,7 +33,7 @@ def can_msg_raw(request):
     # Exists for testing purposes can query the database to delete stuff later
     elif request.method == 'DELETE':
         count = CanServerRaw.objects.all().delete()
-        return JsonResponse({'message': '{} messages were deleted successfully'.format(
+        return JsonResponse({'message': '{} messages were deleted successfully'.format(  # noqa: E501
             count[0])}, status=status.HTTP_204_NO_CONTENT)
 
 
@@ -67,5 +65,5 @@ def can_msg_decoded(request):
     # Exists for testing purposes can query the database to delete stuff later
     elif request.method == 'DELETE':
         count = CanServerDecoded.objects.all().delete()
-        return JsonResponse({'message': '{} messages were deleted successfully'.format(
+        return JsonResponse({'message': '{} messages were deleted successfully'.format(  # noqa: E501
             count[0])}, status=status.HTTP_204_NO_CONTENT)

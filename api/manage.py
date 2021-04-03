@@ -6,10 +6,10 @@ import sys
 
 
 def main():
-    """Run administrative tasks."""
+    """Run administrative tasks."""  # noqa: DAR401
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'django_app.settings')
     try:
-        from django.core.management import execute_from_command_line  # pylint: disable=import-outside-toplevel
+        from django.core.management import execute_from_command_line
     except ImportError as exc:
         raise ImportError(
             "Couldn't import Django. Are you sure it's installed and "

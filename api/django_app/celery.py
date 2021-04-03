@@ -12,9 +12,6 @@ app = Celery('django_app', backend='redis://', broker='redis://')
 # pickle the object when using Windows.
 app.config_from_object(settings, namespace='CELERY')
 
-# app.conf.broker_url = 'redis://localhost:6379/0'
-# app.conf.result_backend = 'redis://localhost:6379/0'
-
 app.autodiscover_tasks()
 
 
@@ -26,8 +23,6 @@ def debug_task(self):
 @app.on_after_configure.connect
 def task_decode_send(sender, **kwargs):
     sender.add_periodic_task(3, decode_and_send, name='decode_send')
-    # decode_and_send()
-    # logger.info("Sent CAN data")
 
 
 if __name__ == '__main__':
