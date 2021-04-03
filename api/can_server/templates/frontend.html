@@ -27,10 +27,6 @@
         document.getElementById("can_msg").textContent=e.data;
 
       var obj = JSON.parse(e.data);
-
-      //console.log(e);
-      //console.log(obj);
-      //console.log(obj['name']);
     }
 
     // raw can websocket logic
@@ -60,9 +56,6 @@
       should_convert = false;
       console.log("set to raw mode");
     }
-
-
-
 
 </script>
 {% endblock script %}
