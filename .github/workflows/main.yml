@@ -88,6 +88,7 @@ jobs:
             ${{ runner.os }}-
 
       - name: Install frontend dependencies
+        if: steps.cache-node-modules.outputs.cache-hit != 'true'
         run: cd client && npm install
       - name: Frontend lint
         run: cd client && npm run lint
