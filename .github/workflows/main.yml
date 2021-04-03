@@ -64,6 +64,7 @@ jobs:
             ${{ runner.os }}-pipenv-
 
       - name: Install backend dependencies 
+        if: steps.cache-pipenv.outputs.cache-hit != 'true'
         run: cd api && pipenv install --dev
 
       # TODO find way to run without setting env var
@@ -77,8 +78,6 @@ jobs:
 
       - name: Cache node modules
         uses: actions/cache@v2
-        env:
-          cache-name: cache-node-modules
         with:
           # npm cache files are stored in `~/.npm` on Linux/macOS
           path: ~/.npm
@@ -87,6 +86,7 @@ jobs:
             ${{ runner.os }}-node-
 
       - name: Install frontend dependencies
+        if: steps.cache-node-modules.outputs.cache-hit != 'true'
         run: cd client && npm ci
       - name: Frontend lint
         run: cd client && npm run lint
