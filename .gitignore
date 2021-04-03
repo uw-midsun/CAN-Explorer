@@ -130,12 +130,8 @@ db.sqlite3
 
 # Node stuff
 node_modules/
-*package-lock.json
 
 # IDE Stuff
 .idea
 .vscode
-
-# Pipenv
-*.lock
 
