@@ -21,23 +21,11 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: Cache node modules
-        uses: actions/cache@v2
-        env:
-          cache-name: cache-node-modules
-        with:
-          # npm cache files are stored in `~/.npm` on Linux/macOS
-          path: ~/.npm
-          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-build-${{ env.cache-name }}-
-            ${{ runner.os }}-build-
-            ${{ runner.os }}-
-
       - name: Setup Python
         uses: actions/setup-python@v2
         with:
           python-version: ${{ matrix.python-version }}
+
       - name: Install pipenv
         run: sudo -H pip3 install -U pipenv
 
@@ -67,16 +55,37 @@ jobs:
       - name: Setup vcan
         run: sudo modprobe vcan && sudo ip link add dev vcan0 type vcan && sudo ip link set up vcan0
 
+      - id: cache-pipenv
+        uses: actions/cache@v2
+        with:
+          path: ~/.local/share/virtualenvs
+          key: ${{ runner.os }}-pipenv-${{ hashFiles('**/Pipfile.lock') }}
+
       - name: Install backend dependencies 
+        if: steps.cache-pipenv.outputs.cache-hit != 'true'
         run: cd api && pipenv install --dev
 
       # TODO find way to run without setting env var
       - name: Setup Django ENV var 
         run: echo "DJANGO_SETTINGS_MODULE=django_app.settings" >> $GITHUB_ENV
       - name: Backend Lint
-        run: cd api && pipenv run python -m flake8 .
+        run: cd api && pipenv run lint
       - name: Backend tests
         run: cd api && pipenv run test
+
+
+      - name: Cache node modules
+        uses: actions/cache@v2
+        env:
+          cache-name: cache-node-modules
+        with:
+          # npm cache files are stored in `~/.npm` on Linux/macOS
+          path: ~/.npm
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-build-${{ env.cache-name }}-
+            ${{ runner.os }}-build-
+            ${{ runner.os }}-
 
       - name: Install frontend dependencies
         run: cd client && npm install
