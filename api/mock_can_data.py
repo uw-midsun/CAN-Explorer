@@ -10,12 +10,6 @@ import can
 import time
 import random
 
-# A negative value for num_messages will cause the script to send CAN
-# messages forever
-num_messages = -1
-sleep_time_s = 1
-can_messages = []
-
 try:
     db = cantools.database.load_file('system_can.dbc')
 except BaseException:
@@ -26,21 +20,24 @@ except BaseException:
 can_bus = can.interface.Bus('vcan0', bustype='socketcan')
 
 
-def main():
-    get_messages()
-    iterate_message_and_signal()
+# A negative value for num_messages will cause the script to send CAN
+# messages forever
+def main(sleep_time_s, num_messages):
+    can_messages = []
+    get_messages(can_messages)
+    iterate_message_and_signal(can_messages, sleep_time_s, num_messages)
 
 
-def get_messages():
+def get_messages(can_messages):
     for msg in db.messages:
         can_messages.append(msg)
 
 
-def iterate_message_and_signal():
+def iterate_message_and_signal(can_messages, sleep_time_s, num_messages):
     num_messages_sent = 0
     while num_messages < 0 or num_messages > num_messages_sent:
         try:
-            send_message()
+            send_message(can_messages)
             num_messages_sent += 1
             time.sleep(sleep_time_s)
         except KeyboardInterrupt:
@@ -48,7 +45,7 @@ def iterate_message_and_signal():
     print("\n" + str(num_messages_sent) + " CAN messages have been sent")
 
 
-def send_message():
+def send_message(can_messages):
     msg = random.choice(can_messages)
     data = {}
     for signal in msg.signals:
@@ -60,4 +57,6 @@ def send_message():
 
 
 if __name__ == "__main__":
-    main()
+    sleep_time_s = 1
+    num_messages = -1
+    main(sleep_time_s, num_messages)

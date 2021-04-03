@@ -17,14 +17,38 @@ django.setup()
 from can_server.serializers import CanServerRawSerializer, CanServerDecodedSerializer
 from can_server.models import CanServerRaw, CanServerDecoded
 
-channel_layer = get_channel_layer()
-
 can_bus = can.interface.Bus('vcan0', bustype='socketcan')
 db = cantools.database.load_file('system_can.dbc')
 
 
-@shared_task
-def decode_and_send():
+def stream_decoded_to_db(time, name, sender, decoded):
+    can_decoded_msg = {
+        'Datetime': time,
+        'Name': name,
+        'Sender': sender,
+        'Data': decoded}
+    decoded_serializer = CanServerDecodedSerializer(data=can_decoded_msg, many=True)
+    if decoded_serializer.is_valid():
+        print(decoded_serializer.data, "WHY!!!")
+        decoded_serializer.save()
+        print("Decoded message sent", can_decoded_msg)
+    else:
+        print("Invalid decoded message", can_decoded_msg)
+
+def stream_raw_to_db(timestamp, arbitration_id, dlc, raw):
+    can_raw_msg = {
+        'Timestamp': timestamp,
+        'ArbitrationID': arbitration_id,
+        'DLC': dlc,
+        'Data': raw}
+    raw_serializer = CanServerRawSerializer(data=can_raw_msg)
+    if raw_serializer.is_valid():
+        raw_serializer.save()
+        print("Raw message sent", can_raw_msg)
+    else:
+        print("Invalid raw message", can_raw_msg)
+
+def receive_messages():
     message = can_bus.recv()
     decoded = db.decode_message(message.arbitration_id, message.data)
 
@@ -32,55 +56,9 @@ def decode_and_send():
     name = db.get_message_by_frame_id(message.arbitration_id).name
     sender = db.get_message_by_frame_id(message.arbitration_id).senders[0]
 
-    # hexadecimal representation of data
-    hex = ''.join('{:02x}'.format(x) for x in message.data)
-    print(hex)
+    stream_decoded_to_db(time, name, sender, decoded)
+    stream_raw_to_db(message.timestamp, message.arbitration_id, message.dlc, message.data)
 
-    # binary rep. of data
-    # most significant bit
-    bin = ''.join(format(byte, '08b') for byte in message.data)
-    print(bin)
-
-    # decimal rep. of data
-    dec = int.from_bytes(message.data, byteorder='big', signed=False)
-    print(dec)
-
-    async_to_sync(channel_layer.group_send)("converted",
-                                            {"type": "websocket_receive",
-                                             'datetime': time,
-                                             'name': name,
-                                             'sender': sender,
-                                             'data': decoded})
-
-    async_to_sync(channel_layer.group_send)("raw",
-                                            {"type": "websocket_receive",
-                                             'timestamp': message.timestamp,
-                                             'dlc': message.dlc,
-                                             'channel': message.channel,
-                                             'data': message.data.decode('utf-8',
-                                                                         'replace')})
-
-    can_decoded_msg = {
-        'Datetime': time,
-        'Name': name,
-        'Sender': sender,
-        'Data': decoded}
-    can_raw_msg = {
-        'Timestamp': message.timestamp,
-        'ArbitrationID': message.arbitration_id,
-        'DLC': message.dlc,
-        'Data': message.data}
-
-    decoded_serializer = CanServerDecodedSerializer(data=can_decoded_msg)
-    raw_serializer = CanServerRawSerializer(data=can_raw_msg)
-
-    if decoded_serializer.is_valid():
-        decoded_serializer.save()
-        print("Decoded message sent", can_decoded_msg)
-    else:
-        print("Invalid decoded message", can_decoded_msg)
-    if raw_serializer.is_valid():
-        raw_serializer.save()
-        print("Raw message sent", can_raw_msg)
-    else:
-        print("Invalid raw message", can_raw_msg)
+@shared_task()
+def decode_and_send():
+    receive_messages()

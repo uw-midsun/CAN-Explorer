@@ -10,6 +10,11 @@ pipenv install
 You'll need 3 separate terminal shells open (4 if mocking data)
 
 ## 1st shell: Web server
+Make sure vcan is started 
+```
+sudo modprobe vcan && sudo ip link add dev vcan0 type vcan && sudo ip link set up vcan0
+```
+
 For first run
 ```
 pipenv run makemigrations
@@ -32,11 +37,6 @@ sudo systemctl start redis.service
 Confirm that Redis is running
 ```
 sudo systemctl status redis.service
-```
-
-Make sure vcan is started 
-```
-sudo modprobe vcan && sudo ip link add dev vcan0 type vcan && sudo ip link set up vcan0
 ```
 
 Export the environment variable
@@ -66,12 +66,6 @@ celery -A django_app beat -l DEBUG -s /tmp/run/celery/beat-schedule
 ```
 
 ## (Optional) 4th shell: Mock data
-
-Make sure vcan is started if you haven't set up the celery worker
-```
-sudo modprobe vcan && sudo ip link add dev vcan0 type vcan && sudo ip link set up vcan0
-```
-
 Make sure mock_can_data is setup for testing
 ```
 pipenv run mock_data
