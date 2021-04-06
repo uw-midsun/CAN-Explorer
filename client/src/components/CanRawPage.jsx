@@ -2,9 +2,14 @@ import React, { useEffect, useRef, useState } from "react";
 import { useTable } from 'react-table'
 import { VictoryBar, VictoryChart } from 'victory'
 
+function connect() {
+  
+}
+
 export default function CanRawPage() {
   const [rawData, setRawData] = useState([]);
   const [count, setCount] = useState(0);
+  const [wsOpen, setwsOpen] = useState(false);
   const [showGraph, setShowGraph] = useState(false);
 
   const data = React.useMemo(
@@ -34,8 +39,6 @@ export default function CanRawPage() {
     []
   )
 
-
-
   const {
     getTableProps,
     getTableBodyProps,
@@ -47,30 +50,35 @@ export default function CanRawPage() {
   //var convert_socket = new WebSocket("wss://localhost:8000/ws/can_server/converted");
   var raw_socket = useRef(null);
 
+  var timeout = 250;
+
   useEffect(() => {
 
     raw_socket.current = new WebSocket("ws://192.168.24.24:8000/ws/can_server/raw");
+    var connectInterval;
 
     // raw can websocket logic
     raw_socket.current.onopen = () => {
+      setwsOpen(true);
+      //timeout = 250;
+      //clearTimeout(connectInterval);
       console.log('Raw CAN WebSockets connection created.');
     };
 
-    if (raw_socket.current.readyState == WebSocket.OPEN) {
+    if (raw_socket.current.readyState === WebSocket.OPEN) {
       raw_socket.current.onopen();
     }
 
     raw_socket.current.onclose = () => {
+      setwsOpen(false);
+      //connectInterval = setTimeout()
       console.log("Raw WebSockets connection closed");
     }
 
-    return () => {
-      raw_socket.current.close();
-    }
+    // TODO add onerror function as well
 
-  }, []);
 
-  useEffect(() => {
+
     if (!raw_socket.current) return;
 
     raw_socket.current.onmessage = function (e) {
@@ -93,7 +101,12 @@ export default function CanRawPage() {
       //data.push(new_data)
       //console.log("yeet");
     }
-  });
+
+    return () => {
+      raw_socket.current.close();
+    }
+
+  }, [rawData]);
 
   // fetch("http://localhost:8000/api/can_server/raw", {
   //   method: "GET",
@@ -115,45 +128,13 @@ export default function CanRawPage() {
     return pairs
   }
 
-
-  // var should_convert = true;
-
-  // convert_socket.onopen = function open() {
-  //   console.log('Converted CAN WebSockets connection created.');
-  // };
-
-  // // Converted can websocket logic 
-  // if (convert_socket.readyState == WebSocket.OPEN) {
-  //   convert_socket.onopen();
-  // }
-
-  // convert_socket.onmessage = function (e) {
-  //   if (should_convert)
-  //     document.getElementById("can_msg").textContent = e.data;
-
-  //   var obj = JSON.parse(e.data);
-
-  //   //console.log(e);
-  //   //console.log(obj);
-  //   //console.log(obj['name']);
-  // }
-
-  // // button logic
-  // document.getElementById("converted_btn").onclick = function f() {
-  //   should_convert = true;
-  //   console.log("set to convert mode");
-  // }
-
-  // document.getElementById("raw_btn").onclick = function f() {
-  //   should_convert = false;
-  //   console.log("set to raw mode");
-  // }
-
   return (
     <div className="max-w-full flex-row">
-      <div className="flex-row">
-        <button> Table view </button>
-        <button onClick={() => setShowGraph(!showGraph)}> Graph view </button>
+      <h1>Websocket connection status : </h1>
+      <div className="flex-row p-5">
+        <button onClick={() => setShowGraph(false)}> Table view </button>
+        <button onClick={() => setShowGraph(true)}> Graph view </button>
+        <button onClick={() => raw_socket.current.onopen()}> Reopen Websocket </button>
       </div>
 
       <div className="flex">
@@ -178,6 +159,7 @@ export default function CanRawPage() {
         </table> */}
 
         {showGraph ?
+        // chart
           <VictoryChart
           domainPadding={20}
           >
@@ -190,6 +172,7 @@ export default function CanRawPage() {
           </VictoryChart>
 
           :
+          // Table
           <table {...getTableProps()} style={{ border: 'solid 1px blue' }}>
             <thead>
               {headerGroups.map(headerGroup => (
@@ -202,6 +185,7 @@ export default function CanRawPage() {
                         background: 'aliceblue',
                         color: 'black',
                         fontWeight: 'bold',
+                        padding: 5
                       }}
                     >
                       {column.render('Header')}
