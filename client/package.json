@@ -12,6 +12,7 @@
     "react-router-dom": "^5.2.0",
     "react-scripts": "4.0.2",
     "react-table": "^7.6.3",
+    "react-use-websocket": "^2.5.0",
     "victory": "^35.4.12",
     "web-vitals": "^1.1.0"
   },
