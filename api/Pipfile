@@ -41,6 +41,5 @@ migrate = "python3 manage.py migrate"
 test = "python3 manage.py test"
 shell = "python3 manage.py shell"
 mock_data = "python3 mock_can_data.py"
-# If below command doesn't work, run "pipenv run python3 -m pylint *.py --load-plugins pylint_django" instead
 lint = "python3 -m flake8 . --strictness=long"
 format = "python3 -m autopep8 --in-place --aggressive --aggressive --recursive ."
