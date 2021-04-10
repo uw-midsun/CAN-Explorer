@@ -8,6 +8,10 @@ from can_server.models import CanServerRaw, CanServerDecoded
 from can_server.serializers import CanServerRawSerializer, CanServerDecodedSerializer
 from rest_framework.decorators import api_view
 
+from asgiref.sync import async_to_sync
+from channels.layers import get_channel_layer
+
+channel_layer = get_channel_layer()
 
 @api_view(['GET', 'POST', 'DELETE'])
 def can_msg_raw(request):
@@ -22,6 +26,15 @@ def can_msg_raw(request):
         # Convert data to json format
         can_msg_data = JSONParser().parse(request)
         raw_serializer = CanServerRawSerializer(data=can_msg_data)
+
+        print(can_msg_data)
+        print(channel_layer)
+        # Stream to websockets
+        # async_to_sync(channel_layer.group_send)("raw", {"type": "websocket_receive", 'timestamp': message.timestamp,
+        #                                             'dlc': message.dlc, 'channel': message.channel, 'data': message.data.decode('utf-8', 'replace')})
+        async_to_sync(channel_layer.group_send)("raw", {"type": "websocket_receive", 'timestamp': can_msg_data['Timestamp'],
+                                                    'dlc': can_msg_data['DLC'], 'channel': can_msg_data['Channel'], 'data': can_msg_data['Data']})
+
         if raw_serializer.is_valid():
             # Save the object to the database in the CanServerRaw collection
             raw_serializer.save()
@@ -47,6 +60,7 @@ def can_msg_decoded(request):
         # Convert data t json format
         can_msg_data = JSONParser().parse(request)
         decoded_serializer = CanServerDecodedSerializer(data=can_msg_data)
+
         if decoded_serializer.is_valid():
             # Save the object to the database in the CanServerDecoded collection
             decoded_serializer.save()
