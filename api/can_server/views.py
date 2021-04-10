@@ -1,3 +1,5 @@
+from django.shortcuts import render
+
 from django.http.response import JsonResponse
 from rest_framework.parsers import JSONParser
 from rest_framework import status
@@ -91,3 +93,6 @@ def can_msg_decoded(request):
         count = CanServerDecoded.objects.all().delete()
         return JsonResponse({'message': '{} messages were deleted successfully'.format(  # noqa: E501
             count[0])}, status=status.HTTP_204_NO_CONTENT)
+
+def ws_test(request):
+    return render(request, "frontend.html")
