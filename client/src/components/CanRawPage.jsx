@@ -14,7 +14,7 @@ export default function CanRawPage() {
       .then((res) => setRawData(res))
       // eslint-disable-next-line no-console
       .catch((err) => console.log(err));
-  }, []);
+  }, [rawData]);
 
   return (
     <div>

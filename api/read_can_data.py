@@ -6,14 +6,14 @@ from datetime import datetime
 # from asgiref.sync import async_to_sync
 # from channels.layers import get_channel_layer
 # from celery import shared_task
+import requests
+import json
+import random
 
-# channel_layer = get_channel_layer()
 
 can_bus = can.interface.Bus('vcan0', bustype='socketcan')
 db = cantools.database.load_file('system_can.dbc')
 
-# def task_decode_send():
-#     decode_and_send()
 
 def decode_and_send():
     message = can_bus.recv()
@@ -36,22 +36,18 @@ def decode_and_send():
     dec = int.from_bytes(message.data, byteorder='big', signed=False)
     print(dec)
 
-    # async_to_sync(channel_layer.group_send)
-    # ("converted",
-    #  {"type": "websocket_receive",
-    #   'datetime': time,
-    #   'name': name,
-    #   'sender': sender,
-    #   'data': decoded})
+    payload = {
+        "Timestamp": 3.3,
+        "ArbitrationID": 257,
+        "DLC": 7,
+        "Channel": "vcan",
+        "Data": random.randint(6, 9)
+    }
+    r = requests.post("http://192.168.24.24:8000/api/can_server/raw", data=json.dumps(payload))
+    print(r.content)
+    print(r.text)
+    print(r.json)
 
-    # async_to_sync(channel_layer.group_send)
-    # ("raw",
-    #  {"type": "websocket_receive",
-    #   'timestamp': message.timestamp,
-    #   'dlc': message.dlc,
-    #   'channel': message.channel,
-    #   'data': message.data.decode('utf-8',
-    #                               'replace')})
 
 def main():
     while True:
@@ -59,7 +55,8 @@ def main():
             decode_and_send()
         except KeyboardInterrupt:
             break
-    print("Collection halted")
+    print("\nCollection halted")
+
 
 if __name__ == "__main__":
     main()

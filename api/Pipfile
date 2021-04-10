@@ -18,6 +18,7 @@ redis = "==3.5.3"
 djangorestframework = "==3.12.2"
 django-cors-headers = "==3.7.0"
 django-jsonfield = "==1.4.1"
+requests = "2.25.1"
 
 [dev-packages]
 flake8 = "==3.9.0"
