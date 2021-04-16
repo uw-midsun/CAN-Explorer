@@ -1,0 +1,4 @@
+django: pipenv run start
+mock_data: pipenv run mock_data
+worker: export DJANGO_SETTINGS_MODULE=django_app.settings && pipenv run worker
+beat: export DJANGO_SETTINGS_MODULE=django_app.settings && pipenv run beat
