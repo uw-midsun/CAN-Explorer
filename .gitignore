@@ -135,5 +135,6 @@ node_modules/
 .idea
 .vscode
 
-*/system_can.dbc
+# TODO figure out way to not require DBC file
+# */system_can.dbc
 
