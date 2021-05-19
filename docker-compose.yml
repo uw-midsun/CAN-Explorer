@@ -1,0 +1,11 @@
+version: '3.3'
+services: 
+    react:
+        build: frontend/
+        ports:
+         - "3000:3000"
+    influxdb:
+        build: influxdb/
+        ports: 
+         - "8086:8086"
+    
