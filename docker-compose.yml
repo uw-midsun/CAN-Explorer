@@ -8,4 +8,8 @@ services:
         build: influxdb/
         ports: 
          - "8086:8086"
+        # volumes: 
+        #  - $PWD/data:/var/lib/influxdb2
+        #  - $PWD/config/config.yml:/etc/influxdb2/config.yml
+        # - .:./
     

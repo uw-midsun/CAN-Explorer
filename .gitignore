@@ -126,3 +126,10 @@ dmypy.json
 
 # Pipenv
 *.lock
+
+*.txt
+!requirements.txt
+
+*system_can.dbc
+
+.vscode
