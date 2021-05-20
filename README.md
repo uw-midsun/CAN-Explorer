@@ -15,6 +15,13 @@ then head over to `localhost:3000` in your local browser to view the CAN-Explore
 
 If you want to see the InfluxDB frontend, visit `localhost:8086`
 
+### AS OF MAY 19
+You will have to expose your ports on Vagrant if you want to access the influxdb frontend. Add the following line underneath the other forwarded ports in the Vagrantfile from the box repo.
+
+```ruby
+config.vm.network :forwarded_port, host: 8086, guest: 8086
+```
+
 To stop the containers, run `docker-compose stop`
 
 ## Sending mock data
