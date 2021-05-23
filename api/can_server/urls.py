@@ -1,7 +1,23 @@
+"""can_server URL Configuration
+
+The `urlpatterns` list routes URLs to views. For more information please see:
+    https://docs.djangoproject.com/en/3.2/topics/http/urls/
+Examples:
+Function views
+    1. Add an import:  from my_app import views
+    2. Add a URL to urlpatterns:  path('', views.home, name='home')
+Class-based views
+    1. Add an import:  from other_app.views import Home
+    2. Add a URL to urlpatterns:  path('', Home.as_view(), name='home')
+Including another URLconf
+    1. Import the include() function: from django.urls import include, path
+    2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
+"""
+
 from django.conf.urls import url
 from can_server import views
 
 urlpatterns = [
-    url(r'^api/can_server/raw$', views.can_msg_raw),
-    url(r'^api/can_server/decoded$', views.can_msg_decoded)
+    url(r'^upload/dbc', views.upload_file),
+    url(r'^view/dbc', views.get_dbc_files)
 ]

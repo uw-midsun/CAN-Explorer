@@ -11,11 +11,8 @@ cd shared
 git clone https://github.com/uw-midsun/CAN-Explorer.git
 cd CAN-Explorer
 ```
-## Requirements:
-The Django app requires Python >= 3.6, Pipenv, MongoDB >= 3.6.3 and Redis >= 6.0
-Python3 should be installed in the Vagrant box already, but if you don't have MongoDB...
 
-## Dependencies setup (Mongo, Pipenv, Redis)
+## Dependencies setup (MongoDB, Pipenv, Node)
 To setup all dependencies for data collection run (only necessary the first time you start working with the database)
 ```
 bash setup.sh
@@ -38,9 +35,54 @@ and
 sudo systemctl stop mongod
 ```
 
-Exit the vagrant shell and reload the box,
+# Starting the Server
+Enter the virtual environment with
 ```
-vagrant reload && vagrant ssh
+pipenv shell
 ```
+If you have not installed dependencies run
+```
+pipenv install
+```
+cd into the api folder 
+```
+cd api
+```
+and start the server with
+```
+pipenv run start
+```
+*Note that the Mongo Daemon must be active
 
-And you should be good to go! 
+# Starting the Client
+cd into the client folder
+```
+cd client
+```
+Install dependencies with
+```
+npm install
+```
+and run
+```
+npm start
+```
+to start the React app
+
+# Testing
+Enter the virtual environment with
+```
+pipenv shell
+```
+If you have not installed dependencies run
+```
+pipenv install
+```
+cd into the api folder 
+```
+cd api
+```
+and run tests with
+```
+pipenv run test
+```
