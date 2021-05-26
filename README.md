@@ -7,27 +7,42 @@ git clone https://github.com/uw-midsun/CAN-Explorer.git
 cd CAN-Explorer
 ```
 
-## Run the app
+# Run the app
 To start the frontend and the influxdb engine, run 
 `docker-compose up -d` in the vagrant development box
 
 then head over to `localhost:3000` in your local browser to view the CAN-Explorer frontend.
 
-If you want to see the InfluxDB frontend, visit `localhost:8086`
+If you want to see the InfluxDB frontend, visit `localhost:8086` and navigate to `Boards -> CAN-Explorer` from the side menu
 
 To stop the containers, run `docker-compose stop`
 
+## InfluxDB login
+Username: `firmware`
+
+Password: `ilovecans`
+
 ## Sending mock data
-Run `make mock_can_data`
+Install python dependencies with `make install_requirements`
+
+Run `make mock_can_data` (with -s flag if you want to silence output)
 
 To stop data transmission, run `make stop_can_data`
 
 You will need to generate a `system_can.dbc` file from the firmware repo and place it inside the `scripts` folder if you haven't done so already. 
 
-# InfluxDB login
-Username: `firmware`
+## Troubleshooting
 
-Password: `ilovecans`
+### Influx container showing "Get Started" view
+This means that the Influx docker container wasn't set up properly. Chances are that the container didn't get enough time to start the database before applying the setup configurations (which will vary based on how powerful your computer is). If this is the case, edit the `influxdb/docker-entrypoint.sh` file to add more seconds e.g 
+
+```bash
+...
+
+sleep 30
+
+...
+```
 
 # Flux cheatsheet
 The default graphs should have most of the common views you'll be using often. However if you want to add some extra constraints, you will need to specify so using InfluxDB's special SQL-like language "Flux". Here's a quick cheatsheet for contraints you'll likely come across.

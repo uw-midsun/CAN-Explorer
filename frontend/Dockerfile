@@ -12,8 +12,8 @@ COPY package.json ./
 # COPY package-lock.json ./
 RUN npm config set unsafe-perm true
 
-RUN npm install
-RUN npm install react-scripts -g
+RUN npm install --force
+# RUN npm install react-scripts -g
 
 ENV FAST_REFRESH=false
 

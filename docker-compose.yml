@@ -8,7 +8,7 @@ services:
          CHOKIDAR_USEPOLLING: "true"
         volumes:
          - $PWD/frontend:/frontend
-         - $PWD/frontend/node_modules
+        # - $PWD/frontend/node_modules
     influxdb:
         build: influxdb/
         ports: 

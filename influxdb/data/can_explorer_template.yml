@@ -1,21 +1,28 @@
 apiVersion: influxdata.com/v2alpha1
 kind: Bucket
 metadata:
-    name: sleepy-euler-2e9001
+    name: burfect-diffie-a88003
+spec:
+    name: orig_bucket
+---
+apiVersion: influxdata.com/v2alpha1
+kind: Bucket
+metadata:
+    name: clever-goodall-a88001
 spec:
     name: converted_data
 ---
 apiVersion: influxdata.com/v2alpha1
 kind: Bucket
 metadata:
-    name: stoic-turing-2e9003
+    name: eager-dijkstra-e88001
 spec:
     name: raw_data
 ---
 apiVersion: influxdata.com/v2alpha1
 kind: Dashboard
 metadata:
-    name: amusing-diffie-2e9005
+    name: gifted-morse-a88001
 spec:
     charts:
       - colors:
@@ -64,7 +71,7 @@ spec:
         tableOptions:
             verticalTimeAxis: true
         timeFormat: YYYY-MM-DD HH:mm:ss
-        width: 4
+        width: 12
       - colors:
           - hex: '#ffffff'
             id: base
@@ -120,6 +127,6 @@ spec:
         tableOptions:
             verticalTimeAxis: true
         timeFormat: YYYY-MM-DD HH:mm:ss
-        width: 4
+        width: 12
         yPos: 4
     name: CAN-Explorer
