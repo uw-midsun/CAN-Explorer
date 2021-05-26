@@ -22,8 +22,20 @@ Run `make mock_can_data`
 
 To stop data transmission, run `make stop_can_data`
 
+You will need to generate a `system_can.dbc` file from the firmware repo and place it inside the `scripts` folder if you haven't done so already. 
+
 # InfluxDB login
 Username: `firmware`
 
 Password: `ilovecans`
+
+# Flux cheatsheet
+The default graphs should have most of the common views you'll be using often. However if you want to add some extra constraints, you will need to specify so using InfluxDB's special SQL-like language "Flux". Here's a quick cheatsheet for contraints you'll likely come across.
+
+## Specify values between a range 
+```
+from(bucket:"example-bucket")
+  |> range(start:-1h)
+  |> filter(fn: (r) => r._value > 50.0 and r._value < 65.0 )
+```
 

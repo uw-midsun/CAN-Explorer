@@ -133,3 +133,5 @@ dmypy.json
 *system_can.dbc
 
 .vscode
+
+config/

@@ -1,18 +1,23 @@
 # This script recieves CAN data and stores the data on mongodb
 
-import cantools
-import can
 from datetime import datetime
-# from asgiref.sync import async_to_sync
-# from channels.layers import get_channel_layer
-# from celery import shared_task
-# import requests
 import json
 import random
 import argparse
 import sys
 import os
+import cantools
+import can
+from influxdb_client import InfluxDBClient, Point, WritePrecision
+from influxdb_client.client.write_api import SYNCHRONOUS
 
+# InfluxDB config
+token = "123456"
+org = "midnightsun"
+raw_bucket = "raw_data"
+converted_bucket = "converted_data"
+
+# Helper utilities to silence / enable output
 # Disable
 def blockPrint():
     sys.stdout = open(os.devnull, 'w')
@@ -25,19 +30,8 @@ parser = argparse.ArgumentParser()
 parser.add_argument('-s', action='store_true')
 options = parser.parse_args()
 
-from influxdb_client import InfluxDBClient, Point, WritePrecision
-from influxdb_client.client.write_api import SYNCHRONOUS
-
-# You can generate a Token from the "Tokens Tab" in the UI
-token = "123456"
-org = "midnightsun"
-bucket = "can_explorer"
-
 client = InfluxDBClient(url="http://localhost:8086", token=token)
 write_api = client.write_api(write_options=SYNCHRONOUS)
-
-# channel_layer = get_channel_layer()
-
 
 can_bus = can.interface.Bus('vcan0', bustype='socketcan')
 db = cantools.database.load_file('system_can.dbc')
@@ -51,6 +45,7 @@ def decode_and_send():
     name = db.get_message_by_frame_id(message.arbitration_id).name
     sender = db.get_message_by_frame_id(message.arbitration_id).senders[0]
 
+    # if -s flag is set, silence output
     if options.s:
         blockPrint()
 
@@ -68,44 +63,14 @@ def decode_and_send():
     print(dec)
 
     print(message.arbitration_id)
+    print(message.dlc)
+    print(message.data)
 
-    payload = {
-        "time": datetime.utcnow(),
-        "ArbitrationID": message.arbitration_id,
-        "DLC": 7,
-        "Channel": "vcan",
-        "Data": random.randint(6, 9)
-    }
-    # r = requests.post("http://192.168.24.24:8000/api/can_server/raw", data=json.dumps(payload))
-    # print(r.content)
-    # print(r.text)
-    # print(r.json)
-
-    # point = Point("mem").tag("host", "host1").field("used_percent", 23.43234543).time(datetime.utcnow(), WritePrecision.NS)
+    rawpoint = Point("mem").field("type", "raw").tag("arbitration_id", message.arbitration_id).tag("dlc", message.dlc).tag("channel", message.channel).tag("hex", hex).tag("bin", bin).tag("dec", dec)
+    conpoint = Point("mem").field("type", "converted").tag("timestamp", time).tag("name", name).tag("sender", sender).tag("dec", dec)
     
-    # TODO convert can_bus timestamp to UTC 
-
-
-    arbpoint = Point("mem").field("test2", 1).tag("arbitration_id", message.arbitration_id).tag("dlc", 7).tag("data", random.randint(6, 9))
-    # dlcpoint = Point("mem").field("test2", 2).tag("dlc", 7)
-    # datapoint = Point("mem").field("test2", 3).tag("data", random.randint(6, 9))
-
-    # write_api.write(bucket, org, [arbpoint, dlcpoint, datapoint])
-    write_api.write(bucket, org, [arbpoint])
-
-
-    # json_body = [
-    #     {
-    #         "time": datetime.utcnow(),
-    #         "ArbitrationID": message.arbitration_id,
-    #         "DLC": 7,
-    #         "Channel": "vcan",
-    #         "Data": random.randint(6, 9)
-    #     }
-    # ]
-
-# async_to_sync(channel_layer.group_send)("raw", {"type": "websocket_receive", 'timestamp': message.timestamp,
-#                                                 'dlc': message.dlc, 'channel': message.channel, 'data': message.data.decode('utf-8', 'replace')})
+    write_api.write(raw_bucket, org, [rawpoint])
+    write_api.write(converted_bucket, org, [conpoint])
 
 
 def main():

@@ -10,8 +10,12 @@ ENV PATH /frontend/node_modules/.bin:$PATH
 # install app dependencies
 COPY package.json ./
 # COPY package-lock.json ./
+RUN npm config set unsafe-perm true
+
 RUN npm install
-# RUN npm install react-scripts@4.0.2 -g
+RUN npm install react-scripts -g
+
+ENV FAST_REFRESH=false
 
 # add app
 COPY . ./
