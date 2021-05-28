@@ -137,3 +137,5 @@ node_modules/
 
 # Pipenv
 *.lock
+
+api/system_can.dbc
