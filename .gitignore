@@ -121,8 +121,21 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
+# Python stuff
+celerybeat-schedule
+db.sqlite3
+
 # OS specific stuff
 .DS_Store
 
+# Node stuff
+node_modules/
+
+# IDE Stuff
+.idea
+.vscode
+
 # Pipenv
 *.lock
+
+api/system_can.dbc

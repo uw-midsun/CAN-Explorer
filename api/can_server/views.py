@@ -1,56 +1,58 @@
-from django.shortcuts import render
-
 from django.http.response import JsonResponse
-from rest_framework.parsers import JSONParser
+from rest_framework.decorators import parser_classes
+from rest_framework.parsers import MultiPartParser
 from rest_framework import status
-
-from can_server.models import CanServerRaw, CanServerDecoded
-from can_server.serializers import CanServerRawSerializer, CanServerDecodedSerializer
 from rest_framework.decorators import api_view
+import cantools
+import can
+
+from can_server.models import DbcFile
+from can_server.serializers import DbcFileSerializer
+
+ALREADY_EXISTS_ERROR = "dbc file with this FileName already exists."
 
 
-@api_view(['GET', 'POST', 'DELETE'])
-def can_msg_raw(request):
-    if request.method == 'GET':
-        # Gets all objects from CanServerRaw collection
-        can_msg_data = CanServerRaw.objects.all()
-        raw_serializer = CanServerRawSerializer(can_msg_data, many=True)
-        # Deserialize data to view in frontend
-        return JsonResponse(raw_serializer.data, safe=False)
-    # POST method will be removed once celery worker/websockets is merged but I needed a way to test django model fields
-    elif request.method == 'POST':
-        # Convert data to json format
-        can_msg_data = JSONParser().parse(request)
-        raw_serializer = CanServerRawSerializer(data=can_msg_data)
-        if raw_serializer.is_valid():
-            # Save the object to the database in the CanServerRaw collection
-            raw_serializer.save()
-            return JsonResponse(raw_serializer.data, status=status.HTTP_201_CREATED)
-        return JsonResponse(raw_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    # Exists for testing purposes can query the database to delete stuff later
-    elif request.method == 'DELETE':
-        count = CanServerRaw.objects.all().delete()
-        return JsonResponse({'message': '{} messages were deleted successfully'.format(count[0])}, status=status.HTTP_204_NO_CONTENT)
+@api_view(['POST'])
+@parser_classes([MultiPartParser])
+def upload_file(request):
+    # Get dbc file as bytes
+    file = request.FILES['data']
+    dbc_file_data = file.read()
 
-@api_view(['GET', 'POST', 'DELETE'])
-def can_msg_decoded(request):
-    if request.method == 'GET':
-        # Gets all objects from CanServerDecoded collection
-        can_msg_data = CanServerDecoded.objects.all()
-        decoded_serializer = CanServerDecodedSerializer(can_msg_data, many=True)
-        # Deserialize data to view in frontend
-        return JsonResponse(decoded_serializer.data, safe=False)
-    # POST method will be removed once celery worker/websockets is merged but I needed a way to test django model fields
-    elif request.method == 'POST':
-        # Convert data t json format
-        can_msg_data = JSONParser().parse(request)
-        decoded_serializer = CanServerDecodedSerializer(data=can_msg_data)
-        if decoded_serializer.is_valid():
-            # Save the object to the database in the CanServerDecoded collection
-            decoded_serializer.save()
-            return JsonResponse(decoded_serializer.data, status=status.HTTP_201_CREATED)
-        return JsonResponse(decoded_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    # Exists for testing purposes can query the database to delete stuff later
-    elif request.method == 'DELETE':
-        count = CanServerDecoded.objects.all().delete()
-        return JsonResponse({'message': '{} messages were deleted successfully'.format(count[0])}, status=status.HTTP_204_NO_CONTENT)
+    # Django BinaryField is buggy so dbc file contents are stored as a TextField
+    db_input = {'FileName': file.name, 'FileData': dbc_file_data.decode('utf-8')}
+    dbc_serializer = DbcFileSerializer(data=db_input)
+    if dbc_serializer.is_valid():
+        dbc_serializer.save()
+    else:
+        # Error occurs when an already existing file name is used
+        # In the future this response will allow frontend to create confirmation message and update database
+        if 'FileName' in dbc_serializer.errors and dbc_serializer.errors['FileName'][0] == ALREADY_EXISTS_ERROR:
+            return JsonResponse(
+                {'response': 'Filename Already Exists'},
+                status=400
+            )
+        return JsonResponse(
+            {'response': 'Unable to Serialize DBC File'},
+            status=500
+        )
+
+    return JsonResponse(
+                {'response': 'DBC File Stored Successfully'},
+                status=201
+            )
+
+
+# Useful later when developing an interface to send CAN messages
+@api_view(['GET'])
+def get_dbc_files(request):
+    dbc_files = DbcFile.objects.all()
+    dbc_file_serializer = DbcFileSerializer(dbc_files, many=True)
+    files_list = []
+    for entry in dbc_file_serializer.data:
+        db = cantools.database.load_string(entry['FileData'])
+        files_list.append(entry['FileName'])
+    return JsonResponse(
+                {'response': files_list},
+                status=200
+            )

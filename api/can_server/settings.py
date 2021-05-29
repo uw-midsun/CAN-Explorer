@@ -1,18 +1,15 @@
-"""Django settings for django_app project"""
-
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-ge$w%*5-c=9u5$zr5rvgua$*c66tm*79ew!u9rr+zahhs_g=fm'
+SECRET_KEY = 'django-insecure-lvt#$wzmwss&)q&3$e-v9t!w()%iffsu#yu0ad6rffrpyzai%&'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['192.168.24.24', 'localhost']
-
+ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 
 # Application definition
 
@@ -23,15 +20,15 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'corsheaders',
     'can_server.apps.CanServerConfig',
     'rest_framework',
-    'corsheaders',
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -44,7 +41,7 @@ CORS_ORIGIN_WHITELIST = (
     'http://localhost:3000',
 )
 
-ROOT_URLCONF = 'django_app.urls'
+ROOT_URLCONF = 'can_server.urls'
 
 TEMPLATES = [
     {
@@ -62,20 +59,23 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'django_app.wsgi.application'
+WSGI_APPLICATION = 'can_server.wsgi.application'
 
-# Database (Mongo)
+
+# Database
+
 DATABASES = {
     'default': {
         'ENGINE': 'djongo',
-        'NAME': 'can_data_db', 
-        'HOST': 'localhost', 
+        'NAME': 'can_data_db',
+        'HOST': 'localhost',
         'PORT': 27017,
-    }
+    },
 }
 
 
 # Password validation
+
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
@@ -93,6 +93,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 
 # Internationalization
+
 LANGUAGE_CODE = 'en-us'
 
 TIME_ZONE = 'UTC'
