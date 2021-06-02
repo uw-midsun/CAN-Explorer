@@ -25,9 +25,6 @@ services:
           - "8000:8000"
         volumes:
           - $PWD/api:/api
-        dns:
-          - 8.8.8.8
-          - 4.4.4.4
         links:
           - mongodb
     influxdb:

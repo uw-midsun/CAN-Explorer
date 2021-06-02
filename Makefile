@@ -33,9 +33,9 @@ install_requirements:
 	@mkdir $(VENV_DIR)
 	@virtualenv $(VENV_DIR)
 	@. $(VENV_DIR)/bin/activate; \
-	pip install -r scripts/requirements.txt
+	pip install -r requirements.txt
 
-.PHONY: mock_can_data
+.PHONY: mock_and_read
 mock_can_data: socketcan
 ifneq (,$(findstring s,$(MAKEFLAGS)))
 	+cd $(SCRIPTS_DIR) && python3 mock_can_data.py -s &
@@ -45,15 +45,22 @@ else
 	cd $(SCRIPTS_DIR) && python3 read_can_data.py &
 endif
 
+.PHONY: mock_can_data
+mock_can_data: socketcan
+ifneq (,$(findstring s,$(MAKEFLAGS)))
+	+cd $(SCRIPTS_DIR) && python3 mock_can_data.py -s &
+else
+	cd $(SCRIPTS_DIR) && python3 mock_can_data.py &
+endif
 
 .PHONY: stop_can_data
 stop_can_data:
-	@for i in $$(ps aux | grep "python3 mock_can_data.py" | grep -v "grep" | cut -d " " -f3); \
+	@for i in $$(ps aux | grep "python3 mock_can_data.py" | grep -v "grep" | awk '{print $$2}'); \
 	do	\
 		echo "Killing mock_can_data process {$$i}"; \
 		kill $$i; \
 	done
-	@for i in $$(ps aux | grep "python3 read_can_data.py" | grep -v "grep" | cut -d " " -f3); \
+	@for i in $$(ps aux | grep "python3 read_can_data.py" | grep -v "grep" | awk '{print $$2}'); \
 	do	\
 		echo "Killing read_can_data process {$$i}"; \
 		kill $$i; \

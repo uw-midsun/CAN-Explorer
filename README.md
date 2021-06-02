@@ -32,7 +32,7 @@ Password: `ilovecans`
 ## Sending mock data
 Install python dependencies with `make install_requirements`
 
-Run `make mock_can_data` (with -s flag if you want to silence output)
+Run `make mock_and_read` (with -s flag if you want to silence output)
 
 To stop data transmission, run `make stop_can_data`
 
@@ -40,7 +40,7 @@ You will need to generate a `system_can.dbc` file from the firmware repo and pla
 
 ## Troubleshooting
 
-### Influx container showing "Get Started" view
+### Influx container showing "Get Started" / "Setup user" view
 This means that the Influx docker container wasn't set up properly. Chances are that the container didn't get enough time to start the database before applying the setup configurations (which will vary based on how powerful your computer is). If this is the case, edit the `influxdb/docker-entrypoint.sh` file to add more seconds e.g 
 
 ```bash
