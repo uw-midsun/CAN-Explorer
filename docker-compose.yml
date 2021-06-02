@@ -9,8 +9,6 @@ services:
         volumes:
          - $PWD/frontend:/frontend
         # - $PWD/frontend/node_modules
-        stdin_open: true
-        tty: true 
     mongodb:
         image: mongo
         ports:

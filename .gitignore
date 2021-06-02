@@ -137,3 +137,5 @@ dmypy.json
 config/
 
 *node_modules/
+
+*lock.json
