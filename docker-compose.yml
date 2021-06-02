@@ -1,6 +1,6 @@
 version: '3.3'
 services: 
-    react:
+    frontend:
         build: frontend/
         ports:
          - "3000:3000"
@@ -9,6 +9,27 @@ services:
         volumes:
          - $PWD/frontend:/frontend
         # - $PWD/frontend/node_modules
+        stdin_open: true
+        tty: true 
+    mongodb:
+        image: mongo
+        ports:
+          - "27017:27017"
+        environment: 
+          MONGO_INITDB_ROOT_USERNAME: root
+          MONGO_INITDB_ROOT_PASSWORD: mongoadmin
+          MONGO_INITDB_DATABASE: can_data_db
+    api:
+        build: api/
+        ports:
+          - "8000:8000"
+        volumes:
+          - $PWD/api:/api
+        dns:
+          - 8.8.8.8
+          - 4.4.4.4
+        links:
+          - mongodb
     influxdb:
         build: influxdb/
         ports: 
@@ -16,4 +37,5 @@ services:
         volumes: 
          - $PWD/influxdb/data:/var/lib/influxdb2
          - $PWD/influxdb/configs:/.influxdbv2/configs
+    
     

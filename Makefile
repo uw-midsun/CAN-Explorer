@@ -33,7 +33,7 @@ install_requirements:
 	@mkdir $(VENV_DIR)
 	@virtualenv $(VENV_DIR)
 	@. $(VENV_DIR)/bin/activate; \
-	pip install -r requirements.txt
+	pip install -r scripts/requirements.txt
 
 .PHONY: mock_can_data
 mock_can_data: socketcan
