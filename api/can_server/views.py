@@ -57,5 +57,20 @@ def get_dbc_files(request):
                 status=200
             )
 
-# @api_view(['POST'])
-# def change_settings(request):
+@api_view(['POST'])
+def change_settings(request):
+    return JsonResponse(
+        {'response': "Settings changed successfully"},
+        status=200
+    )
+
+@api_view(['GET'])
+def get_settings(request):
+    return JsonResponse(
+        {'response': {
+            'bustype': settings.bustype,
+            'bitrate': settings.bitrate,
+            'channel': settings.channel,
+        }
+        }
+    )
