@@ -40,6 +40,7 @@ db = cantools.database.load_file('system_can.dbc')
 def decode_and_send():
     message = can_bus.recv()
     decoded = db.decode_message(message.arbitration_id, message.data)
+    print(decoded)
 
     time = str(datetime.fromtimestamp(message.timestamp))
     name = db.get_message_by_frame_id(message.arbitration_id).name
@@ -67,7 +68,7 @@ def decode_and_send():
     print(message.data)
 
     rawpoint = Point("mem").field("type", "raw").tag("arbitration_id", message.arbitration_id).tag("dlc", message.dlc).tag("channel", message.channel).tag("hex", hex).tag("bin", bin).tag("dec", dec)
-    conpoint = Point("mem").field("type", "converted").tag("timestamp", time).tag("name", name).tag("sender", sender).tag("dec", dec)
+    conpoint = Point("mem").field("type", "converted").tag("timestamp", time).tag("name", name).tag("sender", sender).tag("dec", dec).tag("data", decoded)
     
     write_api.write(raw_bucket, org, [rawpoint])
     write_api.write(converted_bucket, org, [conpoint])

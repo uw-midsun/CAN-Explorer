@@ -56,3 +56,6 @@ def get_dbc_files(request):
                 {'response': files_list},
                 status=200
             )
+
+# @api_view(['POST'])
+# def change_settings(request):
