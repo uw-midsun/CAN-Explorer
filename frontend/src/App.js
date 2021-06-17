@@ -1,6 +1,7 @@
 import React from "react";
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 import FileUpload from "./components/FileUpload/FileUpload";
+import CanSettings from "./components/CanSettings/CanSettings";
 import Home from './components/Home'
 
 function App() {
@@ -24,12 +25,16 @@ function App() {
                     <li class="nav-item">
                         <Link to="/file_upload" class="nav-link"> DBC Upload</Link>
                     </li>
+                    <li class="nav-item">
+                        <Link to="/can_settings" class="nav-link"> Can Settings</Link>
+                    </li>
                 </ul>
             </div>
         </nav>
         <Switch>
           <Route path="/" exact component={Home} />
           <Route path="/file_upload" exact component={FileUpload} />
+          <Route path="/can_settings" exact component={CanSettings} />
         </Switch>
       </div>
     </Router>
