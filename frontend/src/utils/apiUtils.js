@@ -14,21 +14,16 @@ export const uploadFile = (file) => {
     });
 }
 
-export const getSettings = () => {
-
-    // const eventUri = "http://localhost:8000/get_can_settings";
-    // let settings_data = await fetch(eventUri).then(res => res.json()).then(data => console.log(data));
-    // return settings_data;
-}
-
 export const changeSettings = (settings) => {
+    console.log(settings);
     const eventUri = "http://localhost:8000/change_can_settings";
     fetch(eventUri, {
-        method: "POST",
-        body: settings
+        method: "PUT",
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(settings)
     })
     .then((res) => {
-        console.log(res);
+        console.log(res.json());
     }, (err) => {
         console.log(err);
     })

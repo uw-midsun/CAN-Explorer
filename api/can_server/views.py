@@ -63,9 +63,9 @@ def change_settings(request):
     CanSettings.objects.all().delete()
     can_settings_data = request.data
     can_settings_input = {
-        'Bustype': can_settings_data["Bustype"],
-        'Channel': can_settings_data["Channel"],
-        'Bitrate': can_settings_data["Bitrate"],
+        'Bustype': can_settings_data["bustype"],
+        'Channel': can_settings_data["channel"],
+        'Bitrate': can_settings_data["bitrate"],
     }
     can_settings_serializer = CanSettingsSerializer(data=can_settings_input)
 
@@ -88,4 +88,8 @@ def get_settings(request):
     # should only be one instance
     settings = CanSettings.objects.all().first()
     settings_serializer = CanSettingsSerializer(settings)
-    return JsonResponse(settings_serializer.data)
+    return JsonResponse({
+        "bustype": settings_serializer.data["Bustype"],
+        "channel": settings_serializer.data["Channel"],
+        "bitrate": settings_serializer.data["Bitrate"],
+    })
