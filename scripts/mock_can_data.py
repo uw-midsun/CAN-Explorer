@@ -13,6 +13,8 @@ import random
 import argparse
 import cantools
 import can
+import requests
+import json
 
 parser = argparse.ArgumentParser()
 parser.add_argument('-s', action='store_true')
@@ -24,15 +26,15 @@ NUM_MESSAGES = -1
 SLEEP_TIME_S = 3
 can_messages = []
 
+# This can be edited depending on the CAN interface
+can_bus = can.interface.Bus('vcan0', bustype='socketcan')
+
 # pylint: disable=broad-except
 try:
     db = cantools.database.load_file('system_can.dbc')
 except BaseException:
     print("Must generate DBC file first")
     print("Run make gen && make gen-dbc")
-
-# This can be edited depending on the CAN interface
-can_bus = can.interface.Bus('vcan0', bustype='socketcan')
 
 
 def main():
@@ -52,6 +54,9 @@ def iterate_message_and_signal():
     num_messages_sent = 0
     while NUM_MESSAGES < 0 or NUM_MESSAGES > num_messages_sent:
         try:
+            res = requests.get("http://localhost:8000/get_can_settings")
+            data = res.json()
+            can_bus = can.interface.Bus('vcan0', bustype='socketcan', bitrate=data['bitrate'])
             send_message()
             num_messages_sent += 1
             time.sleep(SLEEP_TIME_S)
