@@ -57,6 +57,11 @@ def iterate_message_and_signal():
             res = requests.get("http://localhost:8000/get_can_settings")
             data = res.json()
             can_bus = can.interface.Bus('vcan0', bustype='socketcan', bitrate=data['bitrate'])
+            
+            res = requests.get("http://localhost:8000/view/dbc")
+            data = res.json()
+            print(data)
+            
             send_message()
             num_messages_sent += 1
             time.sleep(SLEEP_TIME_S)
