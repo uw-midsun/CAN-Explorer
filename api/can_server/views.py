@@ -4,6 +4,7 @@ from rest_framework.parsers import MultiPartParser
 from rest_framework import status
 from rest_framework.decorators import api_view
 import cantools
+import logging
 
 from can_server.models import DbcFile, CanSettings
 from can_server.serializers import CanSettingsSerializer, DbcFileSerializer
@@ -49,6 +50,7 @@ def get_dbc_files(request):
     dbc_files = DbcFile.objects.all()
     dbc_file_serializer = DbcFileSerializer(dbc_files, many=True)
     files_list = []
+
     for entry in dbc_file_serializer.data:
         db = cantools.database.load_string(entry['FileData'])
         files_list.append(entry['FileName'])
@@ -57,17 +59,13 @@ def get_dbc_files(request):
         status=200
     )
 
+
 # example PUT request: {"bustype": "virtual", "channel":"vcan", "bitrate":"800000"}
 @api_view(['PUT'])
 def change_settings(request):
     CanSettings.objects.all().delete()
     can_settings_data = request.data
-    can_settings_input = {
-        'Bustype': can_settings_data["bustype"],
-        'Channel': can_settings_data["channel"],
-        'Bitrate': can_settings_data["bitrate"],
-    }
-    can_settings_serializer = CanSettingsSerializer(data=can_settings_input)
+    can_settings_serializer = CanSettingsSerializer(data=can_settings_data)
 
     if can_settings_serializer.is_valid():
         can_settings_serializer.save()
@@ -88,8 +86,5 @@ def get_settings(request):
     # should only be one instance
     settings = CanSettings.objects.all().first()
     settings_serializer = CanSettingsSerializer(settings)
-    return JsonResponse({
-        "bustype": settings_serializer.data["Bustype"],
-        "channel": settings_serializer.data["Channel"],
-        "bitrate": settings_serializer.data["Bitrate"],
-    })
+
+    return JsonResponse(settings_serializer.data)

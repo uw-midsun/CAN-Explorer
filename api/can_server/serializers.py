@@ -11,4 +11,4 @@ class DbcFileSerializer(serializers.ModelSerializer):
 class CanSettingsSerializer(serializers.ModelSerializer):
     class Meta:
         model = CanSettings
-        fields = ('Bustype', 'Channel', 'Bitrate')
+        fields = ('bustype', 'channel', 'bitrate')
