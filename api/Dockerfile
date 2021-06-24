@@ -4,8 +4,6 @@ COPY . ./api
 
 WORKDIR /api
 
-#COPY requirements.txt ./
-
 RUN pip3 install -r requirements.txt
 
 COPY ./api-entrypoint.sh /api-entrypoint.sh

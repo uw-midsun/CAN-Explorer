@@ -32,4 +32,5 @@ services:
         volumes: 
          - $PWD/influxdb/data:/var/lib/influxdb2
          - $PWD/influxdb/configs:/.influxdbv2/configs
-    
+  
+         
