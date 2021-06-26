@@ -1,10 +1,11 @@
 from django.http.response import JsonResponse
 from rest_framework.decorators import parser_classes
-from rest_framework.parsers import MultiPartParser
+from rest_framework.parsers import MultiPartParser, JSONParser
 from rest_framework import status
 from rest_framework.decorators import api_view
 import cantools
 import can
+import json
 
 from can_server.models import DbcFile
 from can_server.serializers import DbcFileSerializer
@@ -43,6 +44,29 @@ def upload_file(request):
             )
 
 
+@api_view(['PATCH'])
+@parser_classes([MultiPartParser])
+def update_dbc_file(request):
+    # Get dbc file as bytes
+    file = request.FILES['data']
+    dbc_file_data = file.read()
+
+    try:
+        dbc_file = DbcFile.objects.get(FileName=file.name)
+        dbc_file.FilData = dbc_file_data.decode('utf-8')
+        dbc_file.save()
+    except DbcFile.DoesNotExist as e:
+        return JsonResponse(
+            {'response': 'File does not exist'},
+            status=404
+        )
+
+    return JsonResponse(
+                {'response': 'DBC File Updated Successfully'},
+                status=201
+            )    
+
+
 # Useful later when developing an interface to send CAN messages
 @api_view(['GET'])
 def get_dbc_files(request):
@@ -56,3 +80,35 @@ def get_dbc_files(request):
                 {'response': files_list},
                 status=200
             )
+
+
+@api_view(['GET'])
+def get_can_messages(request, filename):
+    try:
+        dbc_file = DbcFile.objects.get(FileName=filename)
+    except DbcFile.DoesNotExist as e:
+        return JsonResponse(
+            {'response': 'File does not exist'},
+            status=404
+        )
+
+    dbc_file_serializer = DbcFileSerializer(dbc_file)
+    dbc_file_db = cantools.database.load_string(dbc_file_serializer.data['FileData'])
+
+    can_message_dict = {}
+    for msg in dbc_file_db.messages:
+        can_message_dict[msg.frame_id] = {"name": msg.name, "signals": {}}
+        for sig in msg.signals:
+            can_message_dict[msg.frame_id]["signals"][sig.name] = sig.length
+
+    return JsonResponse(
+                {'response': can_message_dict},
+                status=200
+    )
+
+
+@api_view(['POST'])
+@parser_classes([JSONParser])
+def send_can_message(request):
+    can_bus = can.interface.Bus('vcan0', bustype='socketcan')
+    print(request.data)
