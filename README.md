@@ -7,6 +7,13 @@ git clone https://github.com/uw-midsun/CAN-Explorer.git
 cd CAN-Explorer
 ```
 
+## Docker install 
+If you haven't installed Docker on the development box already, run the following
+```bash
+curl -fsSL https://get.docker.com -o get-docker.sh
+DRY_RUN=1 sh ./get-docker.sh
+``` 
+
 # Run the app
 To start the frontend and the influxdb engine, run 
 `docker-compose up -d` in the vagrant development box
