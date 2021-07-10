@@ -24,6 +24,8 @@ then head over to `localhost:3000` in your local browser to view the CAN-Explore
 
 If you want to see the InfluxDB frontend, visit `localhost:8086` and navigate to `Boards -> CAN-Explorer` from the side menu
 
+WINDOWS USERS: Note that you will have to use Git Bash with __admin access__ or the Windows command prompt to start Vagrant and our Docker app. 
+
 ### AS OF MAY 19
 You will have to expose your ports on Vagrant if you want to access the influxdb frontend. Add the following line underneath the other forwarded ports in the Vagrantfile from the box repo.
 
