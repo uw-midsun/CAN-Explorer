@@ -11,8 +11,10 @@ cd CAN-Explorer
 If you haven't installed Docker on the development box already, run the following
 ```bash
 curl -fsSL https://get.docker.com -o get-docker.sh
-DRY_RUN=1 sh ./get-docker.sh
+sudo sh ./get-docker.sh
 ``` 
+
+If any issues prop up, please consult the official [Docker installation article for Ubuntu Linux](https://docs.docker.com/engine/install/ubuntu/) and [post-installation steps](https://docs.docker.com/engine/install/linux-postinstall/)
 
 # Run the app
 To start the frontend and the influxdb engine, run 
