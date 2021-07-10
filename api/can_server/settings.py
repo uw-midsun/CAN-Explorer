@@ -9,7 +9,7 @@ SECRET_KEY = 'django-insecure-lvt#$wzmwss&)q&3$e-v9t!w()%iffsu#yu0ad6rffrpyzai%&
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'mongodb']
 
 # Application definition
 
@@ -39,6 +39,7 @@ MIDDLEWARE = [
 CORS_ORIGIN_ALLOW_ALL = False
 CORS_ORIGIN_WHITELIST = (
     'http://localhost:3000',
+    'http://frontend:3000' # frontend docker service
 )
 
 ROOT_URLCONF = 'can_server.urls'
@@ -68,8 +69,12 @@ DATABASES = {
     'default': {
         'ENGINE': 'djongo',
         'NAME': 'can_data_db',
-        'HOST': 'localhost',
-        'PORT': 27017,
+        'CLIENT': {
+            'host': 'mongodb', # mongodb docker service
+            'port': 27017,
+            'username': 'root',
+            'password': 'mongoadmin'
+        },
     },
 }
 

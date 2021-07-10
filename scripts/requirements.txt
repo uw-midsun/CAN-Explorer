@@ -1,0 +1,6 @@
+asyncio==3.4.3
+cantools==36.1.0
+python-can==3.3.4
+wheel==0.36.2
+setuptools==52.0.0
+influxdb-client==1.16.0

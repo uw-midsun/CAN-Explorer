@@ -1,88 +1,63 @@
 # CAN-Explorer
 An application to visualize CAN data and interact with the CAN bus
 
-__As of Jan 23__ 
-
-Make sure you have pulled the most recent version of [uwmidsun/box](https://github.com/uw-midsun/box) if you haven't done so already and run `vagrant reload && vagrant ssh` to apply new port-forwarding settings
-
 SSH into the vagrant box and run
 ```
-cd shared
 git clone https://github.com/uw-midsun/CAN-Explorer.git
 cd CAN-Explorer
 ```
 
-## Dependencies setup (MongoDB, Pipenv, Node)
-To setup all dependencies for data collection run (only necessary the first time you start working with the database)
-```
-bash setup.sh
+# Run the app
+To start the frontend and the influxdb engine, run 
+`docker-compose up -d` in the vagrant development box
+
+then head over to `localhost:3000` in your local browser to view the CAN-Explorer frontend.
+
+If you want to see the InfluxDB frontend, visit `localhost:8086` and navigate to `Boards -> CAN-Explorer` from the side menu
+
+### AS OF MAY 19
+You will have to expose your ports on Vagrant if you want to access the influxdb frontend. Add the following line underneath the other forwarded ports in the Vagrantfile from the box repo.
+
+```ruby
+config.vm.network :forwarded_port, host: 8086, guest: 8086
 ```
 
-Verify that the server is active with
-```
-sudo systemctl status mongod
-```
-If you would like to disable mongod from starting when you ssh into the box, run
-```
-sudo systemctl disable mongod
-```
-If you disable mongod you will have to manually start and stop mongod with
-```
-sudo systemctl start mongod
-```
-and
-```
-sudo systemctl stop mongod
+To stop the containers, run `docker-compose stop`
+
+## InfluxDB login
+Username: `firmware`
+
+Password: `ilovecans`
+
+## Sending mock data
+Install python dependencies with `make install_requirements`
+
+Run `make mock_and_read` (with -s flag if you want to silence output)
+
+To stop data transmission, run `make stop_can_data`
+
+You will need to generate a `system_can.dbc` file from the firmware repo and place it inside the `scripts` folder if you haven't done so already. 
+
+## Troubleshooting
+
+### Influx container showing "Get Started" / "Setup user" view
+This means that the Influx docker container wasn't set up properly. Chances are that the container didn't get enough time to start the database before applying the setup configurations (which will vary based on how powerful your computer is). If this is the case, edit the `influxdb/docker-entrypoint.sh` file to add more seconds e.g 
+
+```bash
+...
+
+sleep 30
+
+...
 ```
 
-# Starting the Server
-Enter the virtual environment with
-```
-pipenv shell
-```
-If you have not installed dependencies run
-```
-pipenv install
-```
-cd into the api folder 
-```
-cd api
-```
-and start the server with
-```
-pipenv run start
-```
-*Note that the Mongo Daemon must be active
+# Flux cheatsheet
+The default graphs should have most of the common views you'll be using often. However if you want to add some extra constraints, you will need to specify so using InfluxDB's special SQL-like language "Flux". Here's a quick cheatsheet for contraints you'll likely come across.
 
-# Starting the Client
-cd into the client folder
+## Specify values between a range 
 ```
-cd client
+from(bucket:"example-bucket")
+  |> range(start:-1h)
+  |> filter(fn: (r) => r._value > 50.0 and r._value < 65.0 )
 ```
-Install dependencies with
-```
-npm install
-```
-and run
-```
-npm start
-```
-to start the React app
 
-# Testing
-Enter the virtual environment with
-```
-pipenv shell
-```
-If you have not installed dependencies run
-```
-pipenv install
-```
-cd into the api folder 
-```
-cd api
-```
-and run tests with
-```
-pipenv run test
-```
