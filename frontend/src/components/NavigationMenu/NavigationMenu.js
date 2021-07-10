@@ -9,6 +9,7 @@ import Button from "@material-ui/core/Button";
 import MenuIcon from "@material-ui/icons/Menu";
 import HomeIcon from "@material-ui/icons/Home";
 import RouterIcon from '@material-ui/icons/Router';
+import DataUsageIcon from '@material-ui/icons/DataUsage';
 
 function NavigationMenu() {
   const [openMenu, setOpenMenu] = useState(false);
@@ -46,6 +47,16 @@ function NavigationMenu() {
                 <RouterIcon />
             </ListItemIcon>
             <ListItemText primary="Send Message" />
+          </ListItem>
+          <ListItem
+            button
+            onClick={() => history.push("/transmit")}
+            style={{ marginTop: "10%" }}
+          >
+            <ListItemIcon>
+                <DataUsageIcon />
+            </ListItemIcon>
+            <ListItemText primary="Visualization" />
           </ListItem>
         </List>
       </div>

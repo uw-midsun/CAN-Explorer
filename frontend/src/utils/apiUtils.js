@@ -2,8 +2,8 @@ export const uploadFile = (file) => {
     const formData = new FormData();
     formData.append('data', file);
 
-    const eventUri = "http://localhost:8000/upload/dbc";
-    fetch(eventUri, {
+    const uploadUri = "http://localhost:8000/upload/dbc";
+    fetch(uploadUri, {
         method: "POST",
         body: formData
     })
@@ -12,4 +12,11 @@ export const uploadFile = (file) => {
     }, (err) => {
         console.log(err);
     });
+}
+
+export const viewFiles = () => {
+    const filesUri = "http://localhost:8000/view/dbc";
+    let files = [];
+    fetch(filesUri).then((res) => files = res);
+    return files;
 }

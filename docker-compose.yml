@@ -7,8 +7,8 @@ services:
         environment:
          CHOKIDAR_USEPOLLING: "true"
         volumes:
-         - $PWD/frontend:/frontend
-        # - $PWD/frontend/node_modules
+         - $PWD/frontend:/frontend/frontend
+        #  - $PWD/frontend/node_modules
     mongodb:
         image: mongo
         ports:

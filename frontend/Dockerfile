@@ -1,6 +1,8 @@
 # pull official base image
 FROM node:15.8.0-stretch-slim
 
+# COPY . ./
+
 # set working directory
 WORKDIR /frontend
 
@@ -9,7 +11,7 @@ ENV PATH /frontend/node_modules/.bin:$PATH
 
 # install app dependencies
 COPY package.json ./
-# COPY package-lock.json ./
+
 RUN npm config set unsafe-perm true
 
 RUN npm install --force

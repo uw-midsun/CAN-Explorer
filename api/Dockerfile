@@ -1,6 +1,8 @@
 FROM python:3.7.10-slim-buster
 
-WORKDIR /api 
+# COPY . ./api
+
+WORKDIR /api
 
 COPY requirements.txt ./
 

@@ -2,6 +2,7 @@ import React, {useState} from "react";
 import { Button } from '@material-ui/core';
 import FileDetails from "./FileDetails";
 import { uploadFile } from "../../utils/apiUtils";
+import NavigationMenu from "../NavigationMenu/NavigationMenu";
 
 function FileUpload() {
     const [file, setFile] = useState();
@@ -20,13 +21,17 @@ function FileUpload() {
 
     return (
         <>
-            <input type="file" name="file" onChange={handleNewFile} />
-            {isFileSelected ? (
-                <FileDetails file={file}/>
-            ) : null}
+            <NavigationMenu />
             <br />
-            <br />
-            <Button variant="contained" color="primary" onClick={handleUpload}>Upload File</Button>
+            <div style={{"top": 50}}>
+                <input type="file" name="file" onChange={handleNewFile} />
+                {isFileSelected ? (
+                    <FileDetails file={file}/>
+                ) : null}
+                <br />
+                <br />
+                <Button variant="contained" color="primary" onClick={handleUpload}>Upload File</Button>
+            </div>
         </>
     );
 }

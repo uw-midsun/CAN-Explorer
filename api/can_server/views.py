@@ -67,7 +67,6 @@ def update_dbc_file(request):
             )    
 
 
-# Useful later when developing an interface to send CAN messages
 @api_view(['GET'])
 def get_dbc_files(request):
     dbc_files = DbcFile.objects.all()
