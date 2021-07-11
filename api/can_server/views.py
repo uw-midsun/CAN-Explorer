@@ -62,7 +62,7 @@ def get_dbc_files(request):
 
 # example PUT request: {"bustype": "virtual", "channel":"vcan", "bitrate":"800000"}
 @api_view(['PUT'])
-def change_settings(request):
+def change_can_settings(request):
     CanSettings.objects.all().delete()
     can_settings_data = request.data
     can_settings_serializer = CanSettingsSerializer(data=can_settings_data)
@@ -82,7 +82,7 @@ def change_settings(request):
 
 
 @api_view(['GET'])
-def get_settings(request):
+def get_can_settings(request):
     # should only be one instance
     settings = CanSettings.objects.all().first()
     settings_serializer = CanSettingsSerializer(settings)
