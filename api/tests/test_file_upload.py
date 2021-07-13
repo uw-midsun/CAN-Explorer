@@ -51,4 +51,3 @@ class FileUploadTestCase(APITestCase):
         # Validate that correct Json response is received
         self.assertEqual(response.status_code, 400)
         self.assertEqual(json.loads(response.content)['response'], 'Filename Already Exists')        
-        
