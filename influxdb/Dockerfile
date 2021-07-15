@@ -8,4 +8,3 @@ RUN chmod +x /docker-entrypoint.sh
 
 ENTRYPOINT [ "/docker-entrypoint.sh" ]
 CMD [ "influxd" ]
-

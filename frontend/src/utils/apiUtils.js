@@ -13,3 +13,18 @@ export const uploadFile = (file) => {
         console.log(err);
     });
 }
+
+export const changeSettings = (settings) => {
+    console.log(settings);
+    const eventUri = "http://localhost:8000/change_can_settings";
+    fetch(eventUri, {
+        method: "PUT",
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(settings)
+    })
+    .then((res) => {
+        console.log(res.json());
+    }, (err) => {
+        console.log(err);
+    })
+}
