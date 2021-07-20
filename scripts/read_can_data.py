@@ -69,7 +69,7 @@ def decode_and_send():
 
     jsonData = json.dumps(decoded)
 
-    rawpoint = Point("mem").field("type", "raw").tag("arbitration_id", message.arbitration_id).tag("dlc", message.dlc).tag("channel", message.channel).tag("hex", hex).tag("bin", bin).tag("dec", dec)
+    rawpoint = Point(sender).field("dec", dec).tag("arbitration_id", message.arbitration_id).tag("dlc", message.dlc).tag("channel", message.channel).tag("hex", hex).tag("bin", bin)
 
     conpoints = []
     for key, value in decoded.items():
