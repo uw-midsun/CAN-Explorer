@@ -35,11 +35,6 @@ config.vm.network :forwarded_port, host: 8086, guest: 8086
 
 To stop the containers, run `docker-compose stop`
 
-## InfluxDB login
-Username: `firmware`
-
-Password: `ilovecans`
-
 ## Sending mock data
 Install python dependencies with `make install_requirements`
 
@@ -62,13 +57,42 @@ sleep 30
 ...
 ```
 
+# Usage
+
+Send CAN data via our React frontend at `localhost:3000`
+
+## InfluxDB login
+Username: `firmware`
+
+Password: `ilovecans`
+
+To visualize the data coming in, refer to the "Explore" section in the InfluxDB UI
+
+For some handy common templates, look through the `Board`s we have under the CAN-Explorer dashboard. 
+
 # Flux cheatsheet
-The default graphs should have most of the common views you'll be using often. However if you want to add some extra constraints, you will need to specify so using InfluxDB's special SQL-like language "Flux". Here's a quick cheatsheet for contraints you'll likely come across.
+The default graphs should have most of the common views you'll be using often. However if you want to add some extra constraints, you will need to specify so using InfluxDB's special SQL-like language "Flux". Here's a quick cheatsheet for commands you'll likely need. 
 
 ## Specify values between a range 
-```
+```flux
 from(bucket:"example-bucket")
   |> range(start:-1h)
   |> filter(fn: (r) => r._value > 50.0 and r._value < 65.0 )
+```
+
+## Look for a certain CAN Message
+```flux
+from(bucket: "converted_data")
+  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)
+  |> filter(fn: (r) => r["_field"] == "vehicle_velocity_left") // replace with appropriate CAN Message
+  |> group()
+```
+
+## Only keep certain columns 
+```
+from(bucket: "raw_data")
+  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)
+  |> keep(columns: ["bin", "hex"])
+  |> group()
 ```
 
