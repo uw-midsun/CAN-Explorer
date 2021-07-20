@@ -96,3 +96,4 @@ from(bucket: "raw_data")
   |> group()
 ```
 
+Consult the [official Flux Documentation](https://docs.influxdata.com/influxdb/cloud/query-data/flux/) for more examples.
