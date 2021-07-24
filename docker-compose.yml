@@ -19,12 +19,14 @@ services:
           MONGO_INITDB_DATABASE: can_data_db
     api:
         build: api/
-        ports:
-          - "8000:8000"
+        network_mode: "host"
+
+        # ports:
+        #   - "8000:8000"
         volumes:
           - $PWD/api:/api
-        links:
-          - mongodb
+        # links:
+        #   - mongodb
     influxdb:
         build: influxdb/
         ports: 

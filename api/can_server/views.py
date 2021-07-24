@@ -109,5 +109,54 @@ def get_can_messages(request, filename):
 @api_view(['POST'])
 @parser_classes([JSONParser])
 def send_can_message(request):
-    can_bus = can.interface.Bus('vcan0', bustype='socketcan')
-    print(request.data)
+    #can_bus = can.interface.Bus('vcan0', bustype='socketcan')
+    data = {}
+    signals = request.data["signals"]
+    frame_id = request.data["frame_id"]
+    file = request.data["file"]
+    msg_name = request.data["name"]
+
+    try:
+        dbc_file = DbcFile.objects.get(FileName=file)
+    except DbcFile.DoesNotExist as e:
+        return JsonResponse(
+            {'response': 'File does not exist'},
+            status=404
+        )
+    dbc_file_serializer = DbcFileSerializer(dbc_file)
+    dbc_file_db = cantools.database.load_string(dbc_file_serializer.data['FileData'])
+    
+    try:
+        msg = dbc_file_db.get_message_by_name(msg_name)
+    except KeyError as e:
+        return JsonResponse(
+            {'response': 'Message does not exist'},
+            status=201
+        )
+
+    for sig_name, sig_val in signals.items():
+        data[sig_name] = sig_val
+
+    try:
+        encoded_data = msg.encode(data)
+    except Exception as e:
+        return JsonResponse(
+            {'response': str(e)},
+            status=400
+        )
+
+    message = can.Message(arbitration_id=frame_id, data=encoded_data)
+
+    #can_bus.send(message)
+
+    return JsonResponse(
+        {
+            'response': str(message)
+        },
+        status=200
+    )
+
+    return JsonResponse(
+            {'response': 'Message sent successfully'},
+            status=201
+        )
