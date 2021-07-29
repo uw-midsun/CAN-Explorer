@@ -44,6 +44,12 @@ To stop data transmission, run `make stop_can_data`
 
 You will need to generate a `system_can.dbc` file from the firmware repo and place it inside the `scripts` folder if you haven't done so already. 
 
+If you want to run the scripts individually, you will need to be in the virtualenv i.e run `source .venv/bin/activate`. 
+
+If you want to mock specific CAN messages e.g 'REAR_FAN_FAULT', run `python3 scripts/mock_can_data.py -m REAR_FAN_FAULT`
+
+If you want to read ALL CAN messages, run `python3 scripts/read_can_data.py`
+
 ## Troubleshooting
 
 ### Influx container showing "Get Started" / "Setup user" view
@@ -52,7 +58,7 @@ This means that the Influx docker container wasn't set up properly. Chances are 
 ```bash
 ...
 
-sleep 30
+sleep 60
 
 ...
 ```

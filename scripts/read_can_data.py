@@ -18,6 +18,7 @@ raw_bucket = "raw_data"
 converted_bucket = "converted_data"
 
 # Helper utilities to silence / enable output
+
 # Disable
 def blockPrint():
     sys.stdout = open(os.devnull, 'w')
@@ -27,7 +28,7 @@ def enablePrint():
     sys.stdout = sys.__stdout__
 
 parser = argparse.ArgumentParser()
-parser.add_argument('-s', action='store_true')
+parser.add_argument('-s', action='store_true', help="silence output")
 options = parser.parse_args()
 
 client = InfluxDBClient(url="http://localhost:8086", token=token)
@@ -67,14 +68,11 @@ def decode_and_send():
     print(message.dlc)
     print(message.data)
 
-    jsonData = json.dumps(decoded)
-
     rawpoint = Point(sender).field("dec", dec).tag("arbitration_id", message.arbitration_id).tag("dlc", message.dlc).tag("channel", message.channel).tag("hex", hex).tag("bin", bin)
 
     conpoints = []
     for key, value in decoded.items():
         conpoints.append(Point(sender).field(key, value).tag("name", name))
-        #conpoints.append(Point("mem").field("type", "converted").tag("timestamp", time).tag("name", name).tag("sender", sender).tag(key, value))
     
     write_api.write(raw_bucket, org, [rawpoint])
     write_api.write(converted_bucket, org, conpoints)

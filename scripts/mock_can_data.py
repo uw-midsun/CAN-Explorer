@@ -17,9 +17,8 @@ import requests
 import json
 
 parser = argparse.ArgumentParser()
-parser.add_argument('-s', action='store_true')
-parser.add_argument('-m')
-#parse.add_argument('')
+parser.add_argument('-s', action='store_true', help="silence output")
+parser.add_argument('-m', help="only send specific CAN messages")
 options = parser.parse_args()
 
 # A negative value for num_messages will cause the script to send CAN
@@ -63,10 +62,7 @@ def iterate_message_and_signal():
             res = requests.get("http://localhost:8000/view/dbc")
             data = res.json()
             
-            if options.m:
-                send_specific_message(options.m)
-            else:
-                send_message()
+            send_message()
             num_messages_sent += 1
             time.sleep(SLEEP_TIME_S)
         except KeyboardInterrupt:
@@ -76,18 +72,10 @@ def iterate_message_and_signal():
 
 def send_message():
     """ Sends message to CAN bus """
-    msg = random.choice(can_messages)
-    data = {}
-    for signal in msg.signals:
-        data[signal.name] = random.randint(0, pow(2, signal.length) - 1)
-    new_data = msg.encode(data)
-    message = can.Message(arbitration_id=msg.frame_id, data=new_data)
-    if not options.s:
-        print(message)
-    can_bus.send(message)
-
-def send_specific_message(msg_name):
-    msg = [x for x in can_messages if x.name == msg_name][0]
+    if options.m:
+        msg = [x for x in can_messages if x.name == options.m][0]
+    else:
+        msg = random.choice(can_messages)
     data = {}
     for signal in msg.signals:
         data[signal.name] = random.randint(0, pow(2, signal.length) - 1)
