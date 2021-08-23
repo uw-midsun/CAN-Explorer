@@ -33,10 +33,10 @@ install_requirements:
 	@mkdir $(VENV_DIR)
 	@virtualenv $(VENV_DIR)
 	@. $(VENV_DIR)/bin/activate; \
-	pip install -r requirements.txt
+	pip install -r $(SCRIPTS_DIR)/requirements.txt
 
 .PHONY: mock_and_read
-mock_can_data: socketcan
+mock_and_read: socketcan
 ifneq (,$(findstring s,$(MAKEFLAGS)))
 	+cd $(SCRIPTS_DIR) && python3 mock_can_data.py -s &
 	+cd $(SCRIPTS_DIR) && python3 read_can_data.py -s &
@@ -65,4 +65,3 @@ stop_can_data:
 		echo "Killing read_can_data process {$$i}"; \
 		kill $$i; \
 	done
-

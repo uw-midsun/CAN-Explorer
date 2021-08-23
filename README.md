@@ -7,6 +7,15 @@ git clone https://github.com/uw-midsun/CAN-Explorer.git
 cd CAN-Explorer
 ```
 
+## Docker install 
+If you haven't installed Docker on the development box already, run the following
+```bash
+curl -fsSL https://get.docker.com -o get-docker.sh
+sudo sh ./get-docker.sh
+``` 
+
+If any issues prop up, please consult the official [Docker installation article for Ubuntu Linux](https://docs.docker.com/engine/install/ubuntu/) and [post-installation steps](https://docs.docker.com/engine/install/linux-postinstall/)
+
 # Run the app
 To start the frontend and the influxdb engine, run 
 `docker-compose up -d` in the vagrant development box
@@ -14,6 +23,8 @@ To start the frontend and the influxdb engine, run
 then head over to `localhost:3000` in your local browser to view the CAN-Explorer frontend.
 
 If you want to see the InfluxDB frontend, visit `localhost:8086` and navigate to `Boards -> CAN-Explorer` from the side menu
+
+WINDOWS USERS: Note that you will have to use Git Bash with __admin access__ or the Windows command prompt to start Vagrant and our Docker app. 
 
 ### AS OF MAY 19
 You will have to expose your ports on Vagrant if you want to access the influxdb frontend. Add the following line underneath the other forwarded ports in the Vagrantfile from the box repo.
