@@ -1,28 +1,41 @@
 apiVersion: influxdata.com/v2alpha1
 kind: Bucket
 metadata:
-    name: burfect-diffie-a88003
+    name: musing-zhukovsky-539005
+spec:
+    name: raw_data
+---
+apiVersion: influxdata.com/v2alpha1
+kind: Bucket
+metadata:
+    name: realistic-shaw-539003
 spec:
     name: orig_bucket
 ---
 apiVersion: influxdata.com/v2alpha1
 kind: Bucket
 metadata:
-    name: clever-goodall-a88001
+    name: terrifying-elgamal-539001
 spec:
     name: converted_data
 ---
 apiVersion: influxdata.com/v2alpha1
-kind: Bucket
+kind: Variable
 metadata:
-    name: eager-dijkstra-e88001
+    name: eerie-dewdney-539007
 spec:
-    name: raw_data
+    language: flux
+    name: all_tables
+    query: "from(bucket: \"converted_data\")\r\n  |> range(start: v.timeRangeStart,
+        stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"mem\")\r\n
+        \ |> keep(columns: [\"_start\", \"_stop\", \"_time\", \"_field\", \"_val\",
+        \"name\", \"sender\"])\r\n  |> group()"
+    type: query
 ---
 apiVersion: influxdata.com/v2alpha1
 kind: Dashboard
 metadata:
-    name: gifted-morse-a88001
+    name: zen-swartz-939001
 spec:
     charts:
       - colors:
@@ -58,6 +71,138 @@ spec:
           - displayName: timestamp
             fieldName: timestamp
             visible: true
+          - displayName: data
+            fieldName: data
+            visible: true
+          - displayName: dec
+            fieldName: dec
+            visible: true
+          - displayName: DRIVE_OUTPUT_FROM_MOTOR_CONTROLLER_ACK_STATUS
+            fieldName: DRIVE_OUTPUT_FROM_MOTOR_CONTROLLER_ACK_STATUS
+            visible: true
+          - displayName: current
+            fieldName: current
+            visible: true
+          - displayName: data_point_type
+            fieldName: data_point_type
+            visible: true
+          - displayName: data_value
+            fieldName: data_value
+            visible: true
+          - displayName: dcdc_temp_data
+            fieldName: dcdc_temp_data
+            visible: true
+          - displayName: ebrake_state
+            fieldName: ebrake_state
+            visible: true
+          - displayName: enclosure_temp_data
+            fieldName: enclosure_temp_data
+            visible: true
+          - displayName: fault_data
+            fieldName: fault_data
+            visible: true
+          - displayName: motor_temp_l
+            fieldName: motor_temp_l
+            visible: true
+          - displayName: motor_temp_r
+            fieldName: motor_temp_r
+            visible: true
+          - displayName: power_bitset
+            fieldName: power_bitset
+            visible: true
+          - displayName: reference_voltage
+            fieldName: reference_voltage
+            visible: true
+          - displayName: relay_mask
+            fieldName: relay_mask
+            visible: true
+          - displayName: relay_state
+            fieldName: relay_state
+            visible: true
+          - displayName: temp_1
+            fieldName: temp_1
+            visible: true
+          - displayName: temp_2
+            fieldName: temp_2
+            visible: true
+          - displayName: voltage
+            fieldName: voltage
+            visible: true
+          - displayName: POWER_OFF_SEQUENCE_FROM_PEDAL_ACK_STATUS
+            fieldName: POWER_OFF_SEQUENCE_FROM_PEDAL_ACK_STATUS
+            visible: true
+          - displayName: POWER_ON_AUX_SEQUENCE_FROM_MOTOR_CONTROLLER_ACK_STATUS
+            fieldName: POWER_ON_AUX_SEQUENCE_FROM_MOTOR_CONTROLLER_ACK_STATUS
+            visible: true
+          - displayName: POWER_ON_MAIN_SEQUENCE_FROM_MOTOR_CONTROLLER_ACK_STATUS
+            fieldName: POWER_ON_MAIN_SEQUENCE_FROM_MOTOR_CONTROLLER_ACK_STATUS
+            visible: true
+          - displayName: SET_RELAY_STATES_FROM_BMS_CARRIER_ACK_STATUS
+            fieldName: SET_RELAY_STATES_FROM_BMS_CARRIER_ACK_STATUS
+            visible: true
+          - displayName: SET_RELAY_STATES_FROM_SOLAR_ACK_STATUS
+            fieldName: SET_RELAY_STATES_FROM_SOLAR_ACK_STATUS
+            visible: true
+          - displayName: aux_battery_temp
+            fieldName: aux_battery_temp
+            visible: true
+          - displayName: aux_battery_volt
+            fieldName: aux_battery_volt
+            visible: true
+          - displayName: dcdc_status
+            fieldName: dcdc_status
+            visible: true
+          - displayName: drive_state
+            fieldName: drive_state
+            visible: true
+          - displayName: gnd
+            fieldName: gnd
+            visible: true
+          - displayName: hv
+            fieldName: hv
+            visible: true
+          - displayName: is_connected
+            fieldName: is_connected
+            visible: true
+          - displayName: odometer_val
+            fieldName: odometer_val
+            visible: true
+          - displayName: sequence
+            fieldName: sequence
+            visible: true
+          - displayName: state
+            fieldName: state
+            visible: true
+          - displayName: status_bitset
+            fieldName: status_bitset
+            visible: true
+          - displayName: fault
+            fieldName: fault
+            visible: true
+          - displayName: FAULT_SEQUENCE_FROM_MOTOR_CONTROLLER_ACK_STATUS
+            fieldName: FAULT_SEQUENCE_FROM_MOTOR_CONTROLLER_ACK_STATUS
+            visible: true
+          - displayName: error_id
+            fieldName: error_id
+            visible: true
+          - displayName: limits
+            fieldName: limits
+            visible: true
+          - displayName: target_speed
+            fieldName: target_speed
+            visible: true
+          - displayName: drive_output
+            fieldName: drive_output
+            visible: true
+          - displayName: brake_output
+            fieldName: brake_output
+            visible: true
+          - displayName: throttle_output
+            fieldName: throttle_output
+            visible: true
+          - displayName: lights_id
+            fieldName: lights_id
+            visible: true
         height: 4
         kind: Table
         name: Converted Data
@@ -65,8 +210,8 @@ spec:
           - query: |-
                 from(bucket: "converted_data")
                   |> range(start: v.timeRangeStart, stop: v.timeRangeStop)
-                  |> filter(fn: (r) => r["_measurement"] == "mem")
-                  //|> filter(fn: (r) => r["_field"] == "can-point")
+                  //|> filter(fn: (r) => r["_measurement"] == "POWER_DISTRIBUTION_REAR")
+                  |> keep(columns: ["_start", "_stop", "_time", "_field", "_value", "name", "sender", "_measurement"])
                   |> group()
         tableOptions:
             verticalTimeAxis: true
@@ -121,12 +266,124 @@ spec:
           - query: |-
                 from(bucket: "raw_data")
                   |> range(start: v.timeRangeStart, stop: v.timeRangeStop)
-                  |> filter(fn: (r) => r["_measurement"] == "mem")
-                  //|> filter(fn: (r) => r["_field"] == "can-point")
+                  //|> keep(columns: ["bin", "hex", "_time"])
                   |> group()
         tableOptions:
             verticalTimeAxis: true
         timeFormat: YYYY-MM-DD HH:mm:ss
         width: 12
         yPos: 4
+      - colors:
+          - hex: '#ffffff'
+            id: base
+            name: white
+            type: text
+        fieldOptions:
+          - displayName: _start
+            fieldName: _start
+            visible: true
+          - displayName: _stop
+            fieldName: _stop
+            visible: true
+          - displayName: _time
+            fieldName: _time
+            visible: true
+          - displayName: _value
+            fieldName: _value
+            visible: true
+          - displayName: _field
+            fieldName: _field
+            visible: true
+          - displayName: _measurement
+            fieldName: _measurement
+            visible: true
+          - displayName: name
+            fieldName: name
+            visible: true
+        height: 4
+        kind: Table
+        name: Filtering for FAULTS
+        queries:
+          - query: "import \"dict\"\r\nimport \"experimental/json\"\r\n\r\nfrom(bucket:
+                \"converted_data\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n
+                \ |> filter(fn: (r) => r[\"name\"] =~ /FAULT/) // uses regex\r\n  |>
+                group()"
+        tableOptions:
+            verticalTimeAxis: true
+        timeFormat: YYYY-MM-DD HH:mm:ss
+        width: 12
+        yPos: 8
+      - axes:
+          - base: "10"
+            name: x
+            scale: linear
+          - base: "10"
+            name: y
+            scale: linear
+        colors:
+          - hex: '#31C0F6'
+            id: eb8196f8-219a-4efc-a731-8e551ae38013
+            name: Nineteen Eighty Four
+            type: scale
+          - hex: '#A500A5'
+            id: 63f11a24-19ea-4429-a800-500c6f1255e3
+            name: Nineteen Eighty Four
+            type: scale
+          - hex: '#FF7E27'
+            id: 2648913c-cdd9-43e9-99f5-f31f2db269b0
+            name: Nineteen Eighty Four
+            type: scale
+        geom: line
+        height: 4
+        kind: Xy
+        name: Measuring Motor Velocity
+        position: overlaid
+        queries:
+          - query: |-
+                from(bucket: "converted_data")
+                  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)
+                  |> filter(fn: (r) => r["_measurement"] == "MOTOR_CONTROLLER")
+                  |> filter(fn: (r) => r["_field"] == "vehicle_velocity_left")
+                  |> keep(columns: ["_start", "_stop", "_time", "_field", "_value", "name", "sender", "_measurement"])
+                  |> group()
+        width: 12
+        xCol: _time
+        yCol: _value
+        yPos: 12
+      - axes:
+          - base: "10"
+            name: x
+            scale: linear
+          - base: "10"
+            name: y
+            scale: linear
+        colors:
+          - hex: '#31C0F6'
+            id: d328aaaa-b046-45b5-835c-4ea5a12b947f
+            name: Nineteen Eighty Four
+            type: scale
+          - hex: '#A500A5'
+            id: 25cdc8d7-04d0-40c8-9323-5bba4ed80933
+            name: Nineteen Eighty Four
+            type: scale
+          - hex: '#FF7E27'
+            id: af61b500-938d-4d72-89a0-6aa90066238c
+            name: Nineteen Eighty Four
+            type: scale
+        geom: line
+        height: 4
+        kind: Xy
+        name: Measuring voltage > 10000
+        position: overlaid
+        queries:
+          - query: "from(bucket: \"converted_data\")\r\n  |> range(start: v.timeRangeStart,
+                stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"name\"] == \"BATTERY_VT\"
+                and \r\n                       r[\"_field\"] == \"voltage\" and\r\n
+                \                      r[\"_value\"] > 10000\r\n  )\r\n  |> keep(columns:
+                [\"_start\", \"_stop\", \"_time\", \"_field\", \"_value\", \"name\",
+                \"sender\", \"_measurement\"])\r\n  |> group()"
+        width: 12
+        xCol: _time
+        yCol: _value
+        yPos: 16
     name: CAN-Explorer
