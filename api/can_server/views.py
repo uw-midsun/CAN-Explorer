@@ -132,12 +132,32 @@ def send_can_message(request):
         msg = dbc_file_db.get_message_by_name(msg_name)
     except KeyError as e:
         return JsonResponse(
-            {'response': 'Message does not exist'},
+            {'response': "Message '{}' does not exist".format(msg_name)},
+            status=400
+        )
+
+    if msg.frame_id != frame_id:
+        return JsonResponse(
+            {'response': 'Invalid frame id'},
             status=400
         )
 
     for sig_name, sig_val in signals.items():
         data[sig_name] = int(sig_val)
+
+    for signal in msg.signals:
+        # Checks whether a signal is missing the CAN message
+        if signal.name not in data:
+            return JsonResponse(
+                {'response': "{} missing in request".format(signal.name)},
+                status=400
+            )
+        # Checks whether the signal value is greater than its allowed length
+        if data[signal.name] >= (1 << signal.length):
+            return JsonResponse(
+                {'response': "{} value out of bounds".format(signal.name)},
+                status=400
+            )
 
     try:
         encoded_data = msg.encode(data)
