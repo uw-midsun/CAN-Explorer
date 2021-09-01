@@ -2,17 +2,15 @@ import React, { useState, useEffect } from "react";
 import ChangeSettings from './ChangeSettings';
 import { Button } from '@material-ui/core';
 import Typography from '@material-ui/core/Typography';
-import { getSettings, changeSettings } from "../../utils/apiUtils";
+import NavigationMenu from "../NavigationMenu/NavigationMenu";
 
-const eventUri = "http://localhost:8000/get_can_settings";
-
-function CanSettings(props) {
+function CanSettings() {
     const [settings, setSettings] = useState();
-    const [intervalID, setIntervalID] = useState();
     const [openChangeSettings, setOpenChangeSettings] = useState(false);
 
     useEffect(() => {
-        let delay_in_s = 5;
+        const delay_in_s = 5;
+        const eventUri = "http://localhost:8000/get_can_settings";
         setInterval(() => {
             fetch(eventUri).then(res => res.json()).then(data => {
                 console.log(data)
@@ -29,6 +27,7 @@ function CanSettings(props) {
 
     return (
         <>
+            <NavigationMenu />
             <Typography variant="body1">
                 <h1> Can Settings </h1>
             </Typography>

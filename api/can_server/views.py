@@ -35,7 +35,7 @@ def upload_file(request):
                 status=400
             )
         return JsonResponse(
-            {'response': 'Unable to Serialize DBC File'},
+            {'response': 'Unable to Serialize File'},
             status=500
         )
 
@@ -114,7 +114,7 @@ def send_can_message(request):
     can_bus = can.interface.Bus('vcan0', bustype='socketcan')
     data = {}
     signals = request.data["signals"]
-    frame_id = request.data["frame_id"]
+    frame_id = int(request.data["frame_id"])
     file = request.data["file"]
     msg_name = request.data["name"]
 
@@ -133,11 +133,11 @@ def send_can_message(request):
     except KeyError as e:
         return JsonResponse(
             {'response': 'Message does not exist'},
-            status=201
+            status=400
         )
 
     for sig_name, sig_val in signals.items():
-        data[sig_name] = sig_val
+        data[sig_name] = int(sig_val)
 
     try:
         encoded_data = msg.encode(data)
@@ -150,13 +150,6 @@ def send_can_message(request):
     message = can.Message(arbitration_id=frame_id, data=encoded_data)
 
     can_bus.send(message)
-
-    return JsonResponse(
-        {
-            'response': str(message)
-        },
-        status=200
-    )
 
     return JsonResponse(
             {'response': 'Message sent successfully'},

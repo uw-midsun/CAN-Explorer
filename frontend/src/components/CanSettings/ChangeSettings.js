@@ -1,7 +1,5 @@
-import React, {useState, useEffect, useMemo} from 'react';
+import React, { useState } from 'react';
 import { changeSettings } from '../../utils/apiUtils';
-
-const delay_in_s = 2
 
 function ChangeSettings(props) {
     const [bustype, setBustype] = useState(props.bustype);
@@ -10,6 +8,7 @@ function ChangeSettings(props) {
     const [submitted, setSubmitted] = useState(false);
 
     const handleSubmit = (e) => {
+        const delay_in_s = 2
         e.preventDefault();
         let settings = {
             "bustype": bustype,
@@ -20,9 +19,6 @@ function ChangeSettings(props) {
         setSubmitted(true);
         setTimeout(() => setSubmitted(false), delay_in_s * 1000);
     }
-
-    useEffect(() => {
-    }, [])
 
     return (
         <div>
