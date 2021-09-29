@@ -71,7 +71,7 @@ DATABASES = {
         'ENGINE': 'djongo',
         'NAME': 'can_data_db',
         'CLIENT': {
-            'host': 'mongodb', # mongodb docker service
+            'host': '0.0.0.0', # mongodb docker service
             'port': 27017,
             'username': 'root',
             'password': 'mongoadmin'

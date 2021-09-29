@@ -55,7 +55,11 @@ function SendMessage() {
 
   const sendCanMessage = async () => {
     for (const key of Object.keys(messages[selectedMessage].signals)) {
-      if (signals[key] >= (1 << messages[selectedMessage].signals[key])) {
+      console.log(key);
+      console.log(messages[selectedMessage].signals[key]);
+      console.log(Number(signals[key]));
+      console.log(2**messages[selectedMessage].signals[key]);
+      if (Number(signals[key]) >= (2**messages[selectedMessage].signals[key])) {
         setResponse("Field value out of bounds");
         setError(true);
         return;
@@ -173,8 +177,8 @@ function SendMessage() {
                     key={i}
                     value={signals[key]}
                     onChange={(e) => handleSignalChange(key, e)}
-                    error={signals[key] >= (1 << messages[selectedMessage].signals[key])}
-                    helperText={signals[key] >= (1 << messages[selectedMessage].signals[key]) ? "Integer out of bounds" : null}
+                    error={Number(signals[key]) >= (2**messages[selectedMessage].signals[key])}
+                    helperText={Number(signals[key]) >= (2**messages[selectedMessage].signals[key]) ? "Integer out of bounds" : null}
                     style={{ marginLeft: 5, marginTop: -3, width: 100 }}
                   />
                 </Typography>
