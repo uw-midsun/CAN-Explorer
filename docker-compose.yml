@@ -20,15 +20,9 @@ services:
           MONGO_INITDB_DATABASE: can_data_db
     api:
         build: api/
-        # cap_add:
-        #   - NET_ADMIN
         network_mode: "host"
-        # ports:
-        #   - "8000:8000"
         volumes:
           - $PWD/api:/api
-        # links:
-        #   - mongodb
     influxdb:
         build: influxdb/
         ports:

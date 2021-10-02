@@ -11,14 +11,13 @@ function CanSettings() {
     useEffect(() => {
         const delay_in_s = 5;
         const eventUri = "http://localhost:8000/get_can_settings";
-        setInterval(() => {
+        const interval = setInterval(() => {
             fetch(eventUri).then(res => res.json()).then(data => {
                 console.log(data)
                 setSettings(data)
             });
         }, delay_in_s * 1000)
-        return () => {
-        };
+        return () => clearInterval(interval);
     }, [openChangeSettings]);
 
     const changeSettings = () => {
