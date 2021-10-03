@@ -11,6 +11,10 @@ import MuiAlert from "@material-ui/lab/Alert";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Switch from "@material-ui/core/Switch";
 import Slider from "@material-ui/core/Slider";
+import LinearProgress from "@material-ui/core/LinearProgress";
+import Favorite from "@material-ui/icons/Favorite";
+import FavoriteBorder from "@material-ui/icons/FavoriteBorder";
+import Checkbox from "@material-ui/core/Checkbox";
 import {
   viewFiles,
   viewCanMessages,
@@ -32,6 +36,7 @@ function SendMessage() {
   const [random, setRandom] = useState(false);
   const [frequency, setFrequency] = useState(1);
   const [initiateTest, setInitiateTest] = useState(false);
+  const [filteredMessages, setFilteredMessages] = useState({});
 
   useEffect(() => {
     viewFiles().then((data) => {
@@ -99,10 +104,20 @@ function SendMessage() {
   };
 
   const selectRandomMessage = async () => {
-    let index = Math.floor(Math.random() * messages.length);
-    setRandomMessage(messages[index]);
-    if (initiateTest) {
-      await sendRandomMessage();
+    if (Object.keys(filteredMessages).length > 0) {
+      let index = Math.floor(
+        Math.random() * Object.keys(filteredMessages).length
+      );
+      setRandomMessage(Object.values(filteredMessages)[index]);
+      if (initiateTest) {
+        await sendRandomMessage();
+      }
+    } else {
+      let index = Math.floor(Math.random() * messages.length);
+      setRandomMessage(messages[index]);
+      if (initiateTest) {
+        await sendRandomMessage();
+      }
     }
   };
 
@@ -122,13 +137,36 @@ function SendMessage() {
   };
 
   const sendRandomMessage = async () => {
-    const randomSignals = createRandomSignal(randomMessage.signals);
-    await transmitCanMessage(
-      randomMessage.frameID,
-      randomMessage.name,
-      selectedFile,
-      randomSignals
-    );
+    if (!selectedFile) {
+      setError(true);
+      setResponse("No DBC file selected");
+      return;
+    }
+
+    if (randomMessage && Object.keys(filteredMessages).length === 0) {
+      const randomSignals = createRandomSignal(randomMessage.signals);
+      await transmitCanMessage(
+        randomMessage.frameID,
+        randomMessage.name,
+        selectedFile,
+        randomSignals
+      );
+    } else if (Object.keys(filteredMessages).length > 0) {
+      const randomSignals = createRandomSignal(
+        Object.values(filteredMessages)[0]
+      );
+      await transmitCanMessage(
+        randomMessage.frameID,
+        randomMessage.name,
+        selectedFile,
+        randomSignals
+      );
+    }
+  };
+
+  const searchMessageById = (id) => {
+    const msg = Object.values(messages).filter((val) => val.frameID === id);
+    return msg[0];
   };
 
   const handleFileChange = (event) => {
@@ -159,11 +197,24 @@ function SendMessage() {
   };
 
   const handleRandom = () => {
+    if (random) {
+      setInitiateTest(false);
+    }
     setRandom(!random);
   };
 
   const handleFrequency = (_, newValue) => {
     setFrequency(newValue);
+  };
+
+  const handleCheck = (id) => {
+    const new_msg = searchMessageById(id);
+    if (id in filteredMessages) {
+      delete filteredMessages[id];
+      setFilteredMessages({ ...filteredMessages });
+    } else {
+      setFilteredMessages({ ...filteredMessages, [id]: new_msg });
+    }
   };
 
   const canMessageCard = (index, id, name, signals) => {
@@ -175,6 +226,19 @@ function SendMessage() {
           <Typography variant="body2">
             {"Signals: " + JSON.stringify(signals)}
           </Typography>
+          {random ? (
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={id in filteredMessages}
+                  icon={<FavoriteBorder />}
+                  checkedIcon={<Favorite />}
+                  onChange={() => handleCheck(id)}
+                />
+              }
+              style={{ float: "right" }}
+            />
+          ) : null}
         </CardContent>
       </Card>
     );
@@ -200,7 +264,7 @@ function SendMessage() {
         <Slider
           value={frequency}
           onChange={handleFrequency}
-          min={0}
+          min={0.1}
           max={10}
           valueLabelDisplay="auto"
         />
@@ -247,11 +311,11 @@ function SendMessage() {
             </TextField>
           </div>
         )}
-        {selectedMessage !== "" && (
+        {selectedMessage !== "" && !random && (
           <div style={{ marginTop: 50, marginLeft: "10%" }}>
             {Object.keys(signals).length > 0 &&
               Object.keys(signals).map((key, i) => (
-                <Typography key={i}>
+                <Typography key={i} style={{ wordBreak: "break-word" }}>
                   {key + ":"}
                   <TextField
                     key={i}
@@ -275,9 +339,7 @@ function SendMessage() {
         )}
       </div>
       <MessageStepper activeStep={activeStep} />
-      <div
-        style={{ position: "fixed", top: "75%", margin: "auto", right: 50 }}
-      >
+      <div style={{ position: "fixed", top: "75%", margin: "auto", right: 50 }}>
         {random ? frequencySlider() : null}
         <br />
         <Button
@@ -286,9 +348,14 @@ function SendMessage() {
           variant="contained"
           onClick={sendCanMessage}
         >
-          {random ? (initiateTest ? "Stop" : "Randomize") : "Finish"}
+          {random ? (initiateTest ? "Stop" : "Test") : "Finish"}
         </Button>
       </div>
+      {random && initiateTest ? (
+        <div style={{ marginTop: window.innerHeight - 250 }}>
+          <LinearProgress />
+        </div>
+      ) : null}
       <Snackbar
         open={success}
         autoHideDuration={3000}
