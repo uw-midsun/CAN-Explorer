@@ -66,7 +66,7 @@ function SendMessage() {
       selectRandomMessage();
     }, (1 / frequency) * 1000);
     return () => clearInterval(interval);
-  }, [frequency, messages, initiateTest, randomMessage]);
+  }, [frequency, messages, initiateTest, randomMessage, filteredMessages]);
 
   const getCanMessages = () => {
     viewCanMessages(selectedFile).then((data) => setMessages(data));
@@ -143,18 +143,8 @@ function SendMessage() {
       return;
     }
 
-    if (randomMessage && Object.keys(filteredMessages).length === 0) {
+    if (randomMessage) {
       const randomSignals = createRandomSignal(randomMessage.signals);
-      await transmitCanMessage(
-        randomMessage.frameID,
-        randomMessage.name,
-        selectedFile,
-        randomSignals
-      );
-    } else if (Object.keys(filteredMessages).length > 0) {
-      const randomSignals = createRandomSignal(
-        Object.values(filteredMessages)[0]
-      );
       await transmitCanMessage(
         randomMessage.frameID,
         randomMessage.name,
