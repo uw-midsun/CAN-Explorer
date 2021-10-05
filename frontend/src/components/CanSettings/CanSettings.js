@@ -4,16 +4,16 @@ import { Button } from '@material-ui/core';
 import Typography from '@material-ui/core/Typography';
 import NavigationMenu from "../NavigationMenu/NavigationMenu";
 
+const delay_in_s = 5;
+
 function CanSettings() {
     const [settings, setSettings] = useState();
     const [openChangeSettings, setOpenChangeSettings] = useState(false);
 
     useEffect(() => {
-        const delay_in_s = 5;
         const eventUri = "http://localhost:8000/get_can_settings";
         setInterval(() => {
             fetch(eventUri).then(res => res.json()).then(data => {
-                console.log(data)
                 setSettings(data)
             });
         }, delay_in_s * 1000)
