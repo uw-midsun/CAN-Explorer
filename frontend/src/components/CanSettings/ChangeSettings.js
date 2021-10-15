@@ -1,5 +1,23 @@
 import React, { useState } from 'react';
 import { changeSettings } from '../../utils/apiUtils';
+import Button from '@material-ui/core/Button';
+import Typography from '@material-ui/core/Typography';
+import Dropdown from '../Shared/Dropdown';
+import Grid from '@material-ui/core/Grid';
+
+const bustypeOptions = [
+    'socketcan'
+];
+
+const channelOptions = [
+    'vcan0',
+    'can0'
+]
+
+const bitrateOptions = [
+    '125000',
+    '250000',
+]
 
 function ChangeSettings(props) {
     const [bustype, setBustype] = useState(props.bustype);
@@ -22,24 +40,43 @@ function ChangeSettings(props) {
 
     return (
         <div>
-            <form onSubmit={handleSubmit}>
-                <label>
-                    Bustype: <input type="text" value={bustype} onChange={e => setBustype(e.target.value)} />
-                </label>
-                <label>
-                    Channel <input type="text" value={channel} onChange={e => setChannel(e.target.value)} />
-                </label>
-                <label>
-                    Bitrate <input type="text" value={bitrate} onChange={e => setBitrate(e.target.value)} />
-                </label>
-                <input type="submit" value="Submit" />
-            </form>
-            { submitted && (
-                <>
-                <p>Submitted! </p>
-                </>
-            )}
-        </div>
+            <Grid container spacing={10}>
+                <Grid item>
+                    <Dropdown
+                        buttonText={"Bustype"}
+                        options={bustypeOptions}
+                        selectedItem={bustype}
+                        setSelectedItem={setBustype}
+                    />
+                </Grid>
+                <Grid item>
+                    <Dropdown
+                        buttonText={"Channel"}
+                        options={channelOptions}
+                        selectedItem={channel}
+                        setSelectedItem={setChannel}
+                    />
+                </Grid>
+                <Grid item>
+                    <Dropdown
+                        buttonText={"Channel"}
+                        options={bitrateOptions}
+                        selectedItem={bitrate}
+                        setSelectedItem={setBitrate}
+                    />
+                </Grid>
+            </Grid >
+            <Button variant="contained" size="medium" color="primary" value="Submit" onClick={handleSubmit} >
+                Submit
+            </Button>
+            {
+                submitted && (
+                    <Typography variant="body1" >
+                        Submitted!
+                    </Typography>
+                )
+            }
+        </div >
     )
 }
 

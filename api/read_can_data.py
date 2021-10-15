@@ -6,8 +6,11 @@ import random
 import argparse
 import sys
 import os
+import time
 import cantools
 import can
+import requests
+import asyncio
 from influxdb_client import InfluxDBClient, Point, WritePrecision
 from influxdb_client.client.write_api import SYNCHRONOUS
 
@@ -34,58 +37,101 @@ options = parser.parse_args()
 client = InfluxDBClient(url="http://localhost:8086", token=token)
 write_api = client.write_api(write_options=SYNCHRONOUS)
 
-can_bus = can.interface.Bus('vcan0', bustype='socketcan')
-db = cantools.database.load_file('system_can.dbc')
+can_channel="vcan0"
+can_bustype="socketcan"
+can_bitrate=800000
+can_dbc_file="system_can.dbc"
 
+# global can_bus
+# global db
 
-def decode_and_send():
-    message = can_bus.recv()
-    decoded = db.decode_message(message.arbitration_id, message.data)
-    print(decoded) # dict datatype
+can_bus = can.interface.Bus(can_channel, bustype=can_bustype, bitrate=can_bitrate)
+db = cantools.database.load_file(can_dbc_file)
 
-    time = str(datetime.fromtimestamp(message.timestamp))
-    name = db.get_message_by_frame_id(message.arbitration_id).name
-    sender = db.get_message_by_frame_id(message.arbitration_id).senders[0]
+# https://stackoverflow.com/questions/8600161/executing-periodic-actions/20169930#20169930
+async def do_every(period, f, *args):
+    def g_tick():
+        t = time.time()
+        while True:
+            t += period
+            yield max(t - time.time(),0)
+    g = g_tick()
+    while True:
+        time.sleep(next(g))
+        f(*args)
 
-    # if -s flag is set, silence output
-    if options.s:
-        blockPrint()
-
-    # hexadecimal representation of data
-    hex = ''.join('{:02x}'.format(x) for x in message.data)
-    print(hex)
-
-    # binary rep. of data
-    # most significant bit
-    bin = ''.join(format(byte, '08b') for byte in message.data)
-    print(bin)
-
-    # decimal rep. of data
-    dec = int.from_bytes(message.data, byteorder='big', signed=False)
-    print(dec)
-
-    print(message.arbitration_id)
-    print(message.dlc)
-    print(message.data)
-
-    rawpoint = Point(sender).field("dec", dec).tag("arbitration_id", message.arbitration_id).tag("dlc", message.dlc).tag("channel", message.channel).tag("hex", hex).tag("bin", bin)
-
-    conpoints = []
-    for key, value in decoded.items():
-        conpoints.append(Point(sender).field(key, value).tag("name", name))
-    
-    write_api.write(raw_bucket, org, [rawpoint])
-    write_api.write(converted_bucket, org, conpoints)
-
-
-def main():
+async def update_can_settings():
     while True:
         try:
-            decode_and_send()
-        except KeyboardInterrupt:
-            break
-    print("\nCollection halted")
+            response = requests.get("http://localhost:8000/get_can_settings")
+            r = response.json()
+            can_channel = r['channel']
+            can_bustype = r['bustype']
+            can_bitrate = r['bitrate']
+            can_bus = can.interface.Bus(can_channel, bustype=can_bustype, bitrate=can_bitrate)
+            await asyncio.sleep(0.01)
+        except Exception as e:
+            await asyncio.sleep(0.01)
 
+async def decode_and_send():
+    while True:
+        message = can_bus.recv()
+        decoded = db.decode_message(message.arbitration_id, message.data)
+        print(decoded) # dict datatype
 
-if __name__ == "__main__":
-    main()
+        time = str(datetime.fromtimestamp(message.timestamp))
+        name = db.get_message_by_frame_id(message.arbitration_id).name
+        sender = db.get_message_by_frame_id(message.arbitration_id).senders[0]
+
+        # if -s flag is set, silence output
+        if options.s:
+            blockPrint()
+
+        # hexadecimal representation of data
+        hex = ''.join('{:02x}'.format(x) for x in message.data)
+        print(hex)
+
+        # binary rep. of data
+        # most significant bit
+        bin = ''.join(format(byte, '08b') for byte in message.data)
+        print(bin)
+
+        # decimal rep. of data
+        dec = int.from_bytes(message.data, byteorder='big', signed=False)
+        print(dec)
+
+        print(message.arbitration_id)
+        print(message.dlc)
+        print(message.data)
+
+        # rawpoint = Point(sender).field("dec", dec).tag("arbitration_id", message.arbitration_id).tag("dlc", message.dlc).tag("channel", message.channel).tag("hex", hex).tag("bin", bin)
+
+        conpoints = []
+        for key, value in decoded.items():
+            conpoints.append(Point(sender).field(key, value).tag("name", name).field("dec", dec).tag("arbitration_id", message.arbitration_id).tag("dlc", message.dlc).tag("hex", hex).tag("bin", bin).tag("channel", message.channel).tag("bustype", can_bustype).tag("bitrate", can_bitrate))
+        
+        # write_api.write(raw_bucket, org, [rawpoint])
+        write_api.write(converted_bucket, org, conpoints)
+        await asyncio.sleep(0.01)
+
+# async def main():
+#     while True:
+#         f1 = loop.create_task(decode_and_send())
+#         # f2 = loop.create_task(do_every(1, update_can_settings))
+#         f2 = loop.create_task(update_can_settings())
+#         await asyncio.wait([f1, f2])
+    # asyncio.run(do_every(5, update_can_settings))
+    # while True:
+    #     try:
+    #         decode_and_send()
+    #     except KeyboardInterrupt:
+    #         break
+    # print("\nCollection halted")
+
+# if __name__ == "__main__":
+#     main()
+
+loop = asyncio.get_event_loop()
+asyncio.ensure_future(decode_and_send())
+asyncio.ensure_future(update_can_settings())
+loop.run_forever()
