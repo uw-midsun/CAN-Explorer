@@ -6,23 +6,65 @@
 }
 
 .page-container {
-    margin-top: 50px;
-    display: flex;
-    flex-direction: row;
+  margin-top: 50px;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  padding: 50px;
+  justify-content: space-around;
 }
 
 .file-upload-page {
-    flex: 50%;
+  width: 40%;
+  padding: 20px;
 }
 
 .send-message-page {
-    flex: 50%;
+  width: 40%;
+  padding: 20px;
 }
 
 .can-settings-page {
-    flex: 50%;
+  margin-top: 50px;
+  width: 40%;
+  padding: 20px;
 }
 
 .visualization-page {
-    flex: 50%;
+  margin-top: 50px;
+  width: 40%;
+  padding: 20px;
+}
+
+.upload-icon {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.transmit-icon {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.settings-icon {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.dashboard-icon {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.send-icon {
+  float: right;
+  right: 15px;
+}
+
+.send-icon:hover {
+  color: #6a5acd;
 }
