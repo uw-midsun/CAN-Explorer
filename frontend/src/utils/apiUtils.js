@@ -13,6 +13,22 @@ export const uploadFile = async (file) => {
   return response;
 };
 
+export const getPreview = async (file) => {
+  const formData = new FormData();
+  formData.append("data", file);
+
+  let response;
+  const previewUri = "http://localhost:8000/read/dbc";
+  await fetch(previewUri, {
+    method: "POST",
+    body: formData,
+  })
+    .then((res) => res.status < 400 ?  res.json() : null)
+    .then((res) => res ? flattenCanMessageObject(res.response) : "")
+    .then((res) => (response = res));
+  return response;
+};
+
 export const viewFiles = async () => {
   const filesUri = "http://localhost:8000/view/dbc";
   let files;

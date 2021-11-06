@@ -1,0 +1,28 @@
+.team-logo {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 60%;
+}
+
+.page-container {
+    margin-top: 50px;
+    display: flex;
+    flex-direction: row;
+}
+
+.file-upload-page {
+    flex: 50%;
+}
+
+.send-message-page {
+    flex: 50%;
+}
+
+.can-settings-page {
+    flex: 50%;
+}
+
+.visualization-page {
+    flex: 50%;
+}

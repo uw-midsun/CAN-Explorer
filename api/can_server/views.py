@@ -45,6 +45,31 @@ def upload_file(request):
     )
 
 
+@api_view(['POST'])
+@parser_classes([MultiPartParser])
+def read_file(request):
+    try:
+        file = request.FILES["data"]
+        dbc_file_data = file.read()
+        decoded = dbc_file_data.decode('utf-8')
+        dbc_file_db = cantools.database.load_string(decoded)
+        can_message_dict = {}
+        for msg in dbc_file_db.messages:
+            can_message_dict[msg.frame_id] = {"name": msg.name, "signals": {}}
+            for sig in msg.signals:
+                can_message_dict[msg.frame_id]["signals"][sig.name] = sig.length
+
+        return JsonResponse(
+                    {'response': can_message_dict},
+                    status=200
+        )
+    except Exception as e:
+        return JsonResponse(
+            {'response': e},
+            status=400
+        )
+
+
 @api_view(['PATCH'])
 @parser_classes([MultiPartParser])
 def update_dbc_file(request):
@@ -54,7 +79,7 @@ def update_dbc_file(request):
 
     try:
         dbc_file = DbcFile.objects.get(FileName=file.name)
-        dbc_file.FilData = dbc_file_data.decode('utf-8')
+        dbc_file.FileData = dbc_file_data.decode('utf-8')
         dbc_file.save()
     except DbcFile.DoesNotExist as e:
         return JsonResponse(
