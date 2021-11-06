@@ -39,6 +39,7 @@ MIDDLEWARE = [
 CORS_ORIGIN_ALLOW_ALL = False
 CORS_ORIGIN_WHITELIST = (
     'http://localhost:3000',
+    'http://localhost:3001',
     'http://frontend:3000' # frontend docker service
 )
 
@@ -70,7 +71,7 @@ DATABASES = {
         'ENGINE': 'djongo',
         'NAME': 'can_data_db',
         'CLIENT': {
-            'host': 'mongodb', # mongodb docker service
+            'host': '0.0.0.0', # mongodb docker service
             'port': 27017,
             'username': 'root',
             'password': 'mongoadmin'

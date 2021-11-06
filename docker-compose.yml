@@ -1,34 +1,38 @@
 version: '3.3'
-services: 
-    frontend:
-        build: frontend/
-        ports:
-         - "3000:3000"
-        environment:
-         CHOKIDAR_USEPOLLING: "true"
-        volumes:
-         - $PWD/frontend:/frontend
-        # - $PWD/frontend/node_modules
+services:
+    # frontend:
+    #     build: frontend/
+    #     ports:
+    #       - "3000:3000"
+    #     environment:
+    #      CHOKIDAR_USEPOLLING: "true"
+    #     volumes:
+    #       - $PWD/frontend:/usr/src/app
+    #       - /usr/src/app/node_modules/
+    #     command: /usr/src/app/entrypoint.sh
     mongodb:
         image: mongo
         ports:
           - "27017:27017"
-        environment: 
+        environment:
           MONGO_INITDB_ROOT_USERNAME: root
           MONGO_INITDB_ROOT_PASSWORD: mongoadmin
           MONGO_INITDB_DATABASE: can_data_db
     api:
         build: api/
-        ports:
-          - "8000:8000"
+        # cap_add:
+        #   - NET_ADMIN
+        network_mode: "host"
+        # ports:
+        #   - "8000:8000"
         volumes:
           - $PWD/api:/api
-        links:
-          - mongodb
+        # links:
+        #   - mongodb
     influxdb:
         build: influxdb/
-        ports: 
+        ports:
          - "8086:8086"
-        volumes: 
+        volumes:
          - $PWD/influxdb/data:/var/lib/influxdb2
          - $PWD/influxdb/configs:/.influxdbv2/configs

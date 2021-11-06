@@ -57,7 +57,7 @@ def iterate_message_and_signal():
         try:
             res = requests.get("http://localhost:8000/get_can_settings")
             data = res.json()
-            can_bus = can.interface.Bus('vcan0', bustype='socketcan', bitrate=data['bitrate'])
+            can_bus = can.interface.Bus(data['channel'], bustype=data['bustype'], bitrate=data['bitrate'])
             
             res = requests.get("http://localhost:8000/view/dbc")
             data = res.json()
