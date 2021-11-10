@@ -7,12 +7,15 @@ import Typography from '@material-ui/core/Typography';
 export default function Dropdown({
     options,
     selectedItem,
+    originalItem,
     setSelectedItem,
-    buttonText
 }) {
-
-    const [idx, setSelectedIdx] = useState(0);
+    const [idx, setSelectedIdx] = useState(options.findIndex((e) => e === selectedItem));
     const [anchorEl, setAnchorEl] = useState(null);
+
+    useEffect(() => {
+
+    }, [])
 
     useEffect(() => {
         setSelectedItem(options[idx]);
@@ -33,11 +36,6 @@ export default function Dropdown({
 
     return (
         <div>
-            <Typography
-                variant="h5"
-            >
-                {buttonText}
-                </Typography> 
             <Button aria-controls="simple-menu" aria-haspopup="true" onClick={handleClick}>
                 {selectedItem}
             </Button>
