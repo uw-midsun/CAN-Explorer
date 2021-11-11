@@ -20,13 +20,11 @@ org = "midnightsun"
 raw_bucket = "raw_data"
 converted_bucket = "converted_data"
 
-# Helper utilities to silence / enable output
-
-# Disable
+# Disables printing
 def blockPrint():
     sys.stdout = open(os.devnull, 'w')
 
-# Restore
+# Restores printing
 def enablePrint():
     sys.stdout = sys.__stdout__
 
@@ -42,12 +40,10 @@ can_bustype="socketcan"
 can_bitrate=800000
 can_dbc_file="system_can.dbc"
 
-# global can_bus
-# global db
-
 can_bus = can.interface.Bus(can_channel, bustype=can_bustype, bitrate=can_bitrate)
 db = cantools.database.load_file(can_dbc_file)
 
+# python concurrency leaves much to be desired, so we have to use some 'tricks'
 # https://stackoverflow.com/questions/8600161/executing-periodic-actions/20169930#20169930
 async def do_every(period, f, *args):
     def g_tick():
@@ -104,33 +100,14 @@ async def decode_and_send():
         print(message.dlc)
         print(message.data)
 
-        # rawpoint = Point(sender).field("dec", dec).tag("arbitration_id", message.arbitration_id).tag("dlc", message.dlc).tag("channel", message.channel).tag("hex", hex).tag("bin", bin)
-
         conpoints = []
         for key, value in decoded.items():
             conpoints.append(Point(sender).field(key, value).tag("name", name).field("dec", dec).tag("arbitration_id", message.arbitration_id).tag("dlc", message.dlc).tag("hex", hex).tag("bin", bin).tag("channel", message.channel).tag("bustype", can_bustype).tag("bitrate", can_bitrate))
         
-        # write_api.write(raw_bucket, org, [rawpoint])
         write_api.write(converted_bucket, org, conpoints)
         await asyncio.sleep(0.01)
 
-# async def main():
-#     while True:
-#         f1 = loop.create_task(decode_and_send())
-#         # f2 = loop.create_task(do_every(1, update_can_settings))
-#         f2 = loop.create_task(update_can_settings())
-#         await asyncio.wait([f1, f2])
-    # asyncio.run(do_every(5, update_can_settings))
-    # while True:
-    #     try:
-    #         decode_and_send()
-    #     except KeyboardInterrupt:
-    #         break
-    # print("\nCollection halted")
-
-# if __name__ == "__main__":
-#     main()
-
+# run read script forever
 loop = asyncio.get_event_loop()
 asyncio.ensure_future(decode_and_send())
 asyncio.ensure_future(update_can_settings())

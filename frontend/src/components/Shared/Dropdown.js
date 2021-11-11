@@ -2,20 +2,14 @@ import React, { useState, useEffect } from 'react';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import Button from '@material-ui/core/Button';
-import Typography from '@material-ui/core/Typography';
 
 export default function Dropdown({
     options,
     selectedItem,
-    originalItem,
     setSelectedItem,
 }) {
     const [idx, setSelectedIdx] = useState(options.findIndex((e) => e === selectedItem));
     const [anchorEl, setAnchorEl] = useState(null);
-
-    useEffect(() => {
-
-    }, [])
 
     useEffect(() => {
         setSelectedItem(options[idx]);
