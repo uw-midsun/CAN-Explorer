@@ -83,3 +83,30 @@ export const changeSettings = (settings) => {
     }
   );
 };
+
+export const asyncChangeSettings = async (settings) => {
+  const eventUri = "http://localhost:8000/change_can_settings";
+  let data;
+  await fetch(eventUri, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(settings),
+  }).then(
+    (res) => {
+      data = res;
+    },
+    (err) => {
+      console.log(err);
+    }
+  );
+  return data;
+};
+
+export const asyncGetSettings = async () => {
+  const eventUri = "http://localhost:8000/get_can_settings";
+  let data;
+  await fetch(eventUri).then(res => res.json()).then(res => {
+    data = res;
+  });
+  return data;
+}

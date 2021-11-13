@@ -1,15 +1,21 @@
 # pull official base image
 FROM node:15.8.0-stretch-slim
 
-RUN mkdir /usr/src/cache
-WORKDIR /usr/src/cache
+# add app
+COPY . ./
 
-COPY package.json .
-RUN npm install
+# set working directory
+WORKDIR /frontend
 
-RUN mkdir /usr/src/app
-WORKDIR /usr/src/app
+# add `/app/node_modules/.bin` to $PATH
+ENV PATH /frontend/node_modules/.bin:$PATH
 
-ENV NODE_PATH=/usr/src/app/node_modules/.bin
+# install app dependencies
+RUN npm config set unsafe-perm true
 
-COPY . .
+RUN npm install --force
+
+ENV FAST_REFRESH=false
+
+# start app
+CMD ["npm", "start"]
