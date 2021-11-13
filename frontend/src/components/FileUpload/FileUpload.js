@@ -6,22 +6,26 @@ import AddIcon from "@material-ui/icons/Add";
 import PublishIcon from "@material-ui/icons/Publish";
 import MuiAlert from "@material-ui/lab/Alert";
 import FileDetails from "./FileDetails";
-import { uploadFile } from "../../utils/apiUtils";
+import { getPreview, uploadFile } from "../../utils/apiUtils";
 import NavigationMenu from "../NavigationMenu/NavigationMenu";
+import FilePreview from "./FilePreview";
 
 function FileUpload() {
   const [file, setFile] = useState();
   const [isFileSelected, setIsFileSelected] = useState(false);
+  const [previewText, setPreviewText] = useState("");
   const [error, setError] = useState(false);
   const [success, setSuccess] = useState(false);
   const [response, setResponse] = useState("");
 
   const fileInput = useRef();
 
-  const handleNewFile = (e) => {
+  const handleNewFile = async (e) => {
     const file = e.target.files[0];
     setFile(file);
     setIsFileSelected(true);
+    const previewResponse = await getPreview(file);
+    setPreviewText(previewResponse);
   };
 
   const handleUpload = async () => {
@@ -49,26 +53,31 @@ function FileUpload() {
     <>
       <NavigationMenu />
       <br />
-      <div style={{ marginTop: 50, marginLeft: 50 }}>
-        <input
-          id="button-file"
-          type="file"
-          ref={fileInput}
-          onChange={handleNewFile}
-          style={{ display: "none" }}
-        />
-        <Fab color="primary" onClick={() => fileInput.current.click()}>
-          <AddIcon />
-        </Fab>
-        {isFileSelected ? <FileDetails file={file} /> : null}
-        <br />
-        <br />
-        {isFileSelected ? (
-          <Button variant="contained" color="primary" onClick={handleUpload}>
-            Upload
-            <PublishIcon style={{ marginLeft: 10 }} />
-          </Button>
-        ) : null}
+      <div style={{ marginTop: 50, display: "flex" }}>
+        <div style={{ width: "50%", marginLeft: 100 }}>
+          <input
+            id="button-file"
+            type="file"
+            ref={fileInput}
+            onChange={handleNewFile}
+            style={{ display: "none" }}
+          />
+          <Fab color="primary" onClick={() => fileInput.current.click()}>
+            <AddIcon />
+          </Fab>
+          {isFileSelected ? <FileDetails file={file} /> : null}
+          <br />
+          <br />
+          {isFileSelected ? (
+            <Button variant="contained" color="primary" onClick={handleUpload}>
+              Upload
+              <PublishIcon style={{ marginLeft: 10 }} />
+            </Button>
+          ) : null}
+        </div>
+        <div style={{ width: "50%", marginRight: 100 }}>
+          {file && previewText ? <FilePreview preview={previewText} /> : null}
+        </div>
       </div>
       <Snackbar
         open={success}
