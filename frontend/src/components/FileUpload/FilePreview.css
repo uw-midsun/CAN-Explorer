@@ -1,0 +1,7 @@
+pre { padding: 15px; margin: 5px; background-color: #212121; }
+.string { color: #c38a73; }
+.number { color: #90ee90; }
+.boolean { color: white; }
+.null { color: white; }
+.key { color: #69c4e5; }
+.bracket { color: white; }

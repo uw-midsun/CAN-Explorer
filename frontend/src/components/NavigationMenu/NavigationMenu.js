@@ -90,7 +90,7 @@ function NavigationMenu() {
             <ListItemIcon>
               <RouterIcon />
             </ListItemIcon>
-            <ListItemText primary="Send Message" />
+            <ListItemText primary="Transmit CAN Message" />
           </ListItem>
           <ListItem
             button

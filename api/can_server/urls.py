@@ -4,6 +4,7 @@ from can_server import views
 
 urlpatterns = [
     path('upload/dbc', views.upload_file),
+    path('read/dbc', views.read_file),
     path('upload/dbc/update', views.update_dbc_file),
     path('view/dbc', views.get_dbc_files),
     path('view/can/<str:filename>', views.get_can_messages),
