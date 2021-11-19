@@ -8,8 +8,8 @@ import can
 import json
 import logging
 
-from can_server.models import DbcFile, CanSettings
-from can_server.serializers import CanSettingsSerializer, DbcFileSerializer
+from can_server.models import DbcFile, CanSettings, SelectedDBCFile
+from can_server.serializers import CanSettingsSerializer, DbcFileSerializer, SelectedDBCFileSerializer
 
 ALREADY_EXISTS_ERROR = "dbc file with this FileName already exists."
 
@@ -127,6 +127,21 @@ def get_can_messages(request, filename):
         for sig in msg.signals:
             can_message_dict[msg.frame_id]["signals"][sig.name] = sig.length
 
+    db_input = {
+        'FileName': dbc_file_serializer.data['FileName'],
+        'FileData': dbc_file_serializer.data['FileData']
+    }
+    selected_serializer = SelectedDBCFileSerializer(data=db_input)
+
+    if selected_serializer.is_valid():
+        SelectedDBCFile.objects.all().delete()
+        selected_serializer.save()
+    else:
+        return JsonResponse(
+            {'response': 'Unable to select file'},
+            status=404
+        )
+
     return JsonResponse(
                 {'response': can_message_dict},
                 status=200
@@ -229,4 +244,21 @@ def get_can_settings(request):
     settings = CanSettings.objects.all().first()
     settings_serializer = CanSettingsSerializer(settings)
 
-    return JsonResponse(settings_serializer.data)
+    return JsonResponse(settings_serializer.data, status=200)
+
+
+@api_view(['GET'])
+def get_current_file(request):
+    # should only be one instance
+    selected_file = SelectedDBCFile.objects.all().first()
+    selected_dbc_string = SelectedDBCFileSerializer(selected_file).data['FileData']
+
+    dbc_file_db = cantools.database.load_string(selected_dbc_string)
+
+    can_message_dict = {}
+    for msg in dbc_file_db.messages:
+        can_message_dict[msg.frame_id] = {"name": msg.name, "signals": {}}
+        for sig in msg.signals:
+            can_message_dict[msg.frame_id]["signals"][sig.name] = sig.length
+
+    return JsonResponse(can_message_dict, status=200)
