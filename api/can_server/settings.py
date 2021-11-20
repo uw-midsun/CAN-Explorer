@@ -12,7 +12,6 @@ DEBUG = True
 ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'mongodb', 'frontend']
 
 # Application definition
-
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -65,7 +64,6 @@ WSGI_APPLICATION = 'can_server.wsgi.application'
 
 
 # Database
-
 DATABASES = {
     'default': {
         'ENGINE': 'djongo',
@@ -80,7 +78,6 @@ DATABASES = {
 }
 
 # Password validation
-
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',

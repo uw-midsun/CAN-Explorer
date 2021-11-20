@@ -10,5 +10,6 @@ urlpatterns = [
     path('view/can/<str:filename>', views.get_can_messages),
     path('transmit', views.send_can_message),
     path('change_can_settings', views.change_can_settings),
-    path('get_can_settings', views.get_can_settings)
+    path('get_can_settings', views.get_can_settings),
+    path('view/selected', views.get_current_file)
 ]
