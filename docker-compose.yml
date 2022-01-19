@@ -8,7 +8,6 @@ services:
          CHOKIDAR_USEPOLLING: "true"
         volumes:
          - $PWD/frontend:/frontend
-        # - $PWD/frontend/node_modules
     mongodb:
         image: mongo:4.4.6
         ports:
@@ -17,6 +16,8 @@ services:
           MONGO_INITDB_ROOT_USERNAME: root
           MONGO_INITDB_ROOT_PASSWORD: mongoadmin
           MONGO_INITDB_DATABASE: can_data_db
+        volumes:
+          - db:/data/db
     api:
         build: api/
         network_mode: "host"
@@ -29,3 +30,5 @@ services:
         volumes:
          - $PWD/influxdb/data:/var/lib/influxdb2
          - $PWD/influxdb/configs:/.influxdbv2/configs
+volumes:
+  db:

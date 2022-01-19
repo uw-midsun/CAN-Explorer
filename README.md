@@ -12,60 +12,35 @@ If you haven't installed Docker on the development box already, run the followin
 ```bash
 curl -fsSL https://get.docker.com -o get-docker.sh
 sudo sh ./get-docker.sh
-``` 
+sudo groupadd docker
+sudo usermod -aG docker $USER
+newgrp docker
+```
+
+> Note: To verify that the installation was successful you can run
+> ```bash
+> docker run hello-world
+> ```
+
+To set up Docker Compose run
+```bash
+sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+sudo chmod +x /usr/local/bin/docker-compose
+```
+
+> To verify that the installation was successful you can run
+> ```bash
+> docker-compose --version
+> ```
 
 If any issues prop up, please consult the official [Docker installation article for Ubuntu Linux](https://docs.docker.com/engine/install/ubuntu/) and [post-installation steps](https://docs.docker.com/engine/install/linux-postinstall/)
 
-# Run the app
-To start the frontend and the influxdb engine, run 
-`docker-compose up -d` in the vagrant development box
+# Usage
+To test without a CAN bus run `sudo make socketcan`.
 
-then head over to `localhost:3000` in your local browser to view the CAN-Explorer frontend.
-
-If you want to see the InfluxDB frontend, visit `localhost:8086` and navigate to `Boards -> CAN-Explorer` from the side menu
-
-WINDOWS USERS: Note that you will have to use Git Bash with __admin access__ or the Windows command prompt to start Vagrant and our Docker app. 
-
-### AS OF MAY 19
-You will have to expose your ports on Vagrant if you want to access the influxdb frontend. Add the following line underneath the other forwarded ports in the Vagrantfile from the box repo.
-
-```ruby
-config.vm.network :forwarded_port, host: 8086, guest: 8086
-```
+To start the frontend and the influxdb engine, run `docker-compose up` then head over to `localhost:3000` in your local browser to view the CAN-Explorer frontend.
 
 To stop the containers, run `docker-compose stop`
-
-## Sending mock data
-Install python dependencies with `make install_requirements`
-
-Run `make mock_and_read` (with -s flag if you want to silence output)
-
-To stop data transmission, run `make stop_can_data`
-
-You will need to generate a `system_can.dbc` file from the firmware repo and place it inside the `scripts` folder if you haven't done so already. 
-
-If you want to run the scripts individually, you will need to be in the virtualenv i.e run `source .venv/bin/activate`. 
-
-If you want to mock specific CAN messages e.g 'REAR_FAN_FAULT', run `python3 scripts/mock_can_data.py -m REAR_FAN_FAULT`
-
-If you want to read ALL CAN messages, run `python3 scripts/read_can_data.py`
-
-## Troubleshooting
-
-### Influx container showing "Get Started" / "Setup user" view
-This means that the Influx docker container wasn't set up properly. Chances are that the container didn't get enough time to start the database before applying the setup configurations (which will vary based on how powerful your computer is). If this is the case, edit the `influxdb/docker-entrypoint.sh` file to add more seconds e.g 
-
-```bash
-...
-
-sleep 60
-
-...
-```
-
-# Usage
-
-Send CAN data via our React frontend at `localhost:3000`
 
 ## InfluxDB login
 Username: `firmware`
